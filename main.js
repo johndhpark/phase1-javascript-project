@@ -1,42 +1,43 @@
 document.addEventListener("DOMContentLoaded", async () => {
-	const storeContainer = document.querySelector("ul#store-list");
-	const tripContainer = document.querySelector("ul#trip-list");
+	const storeList = document.querySelector("ul#store-list");
+	const tripList = document.querySelector("ul#trip-list");
 	const cartContainer = document.querySelector("ul#cart-list");
 
 	const cartForm = document.querySelector("form#cart-form");
+	const tripForm = document.querySelector("form#trip-form");
 
 	// Then, make a fetch request to http://localhost:3000/stores.
 	const res = await fetch("http://localhost:3000/stores");
-	const stores = await res.json();
+	const data = await res.json();
 
 	// Iterate through each store and create an list item element to display
-	const tripList = stores.map(({ id, name }) => {
-		const storeEl = document.createElement("li");
-		storeEl.textContent = name;
+	const stores = data.map(({ id, name }) => {
+		const store = document.createElement("li");
+		store.textContent = name;
 
 		// Clicking on the store name will display the list of trips
-		storeEl.addEventListener("click", (e) => {
-			displayStoreTrips(id);
-		});
-		return storeEl;
+		store.addEventListener("click", (e) => displayTrips(id));
+		return store;
 	});
 
 	// Append the stores to ul
 	cartContainer.replaceChildren();
-	storeContainer.replaceChildren(...tripList);
+	storeList.replaceChildren(...stores);
 
+	// Add the submit event listeners to forms
 	cartForm.addEventListener("submit", addNewCartItem);
+	tripForm.addEventListener("submit", addNewTrip);
 
 	/*
 		EVENT HANDLERS
 	*/
 
-	async function displayStoreTrips(storeId) {
+	async function displayTrips(storeId) {
 		const res = await fetch("http://localhost:3000/trips");
-		const trips = await res.json();
+		const data = await res.json();
 
 		// Iterate through each store trip and create a list element
-		const storeTrips = trips
+		const trips = data
 			.filter((trip) => parseInt(trip.storeId) === storeId)
 			.map(({ id, date }) => {
 				const tripEl = document.createElement("li");
@@ -51,8 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Update the trip list
 		cartContainer.replaceChildren();
-		tripContainer.replaceChildren(...storeTrips);
-		tripContainer.dataset.storeId = storeId;
+		tripList.replaceChildren(...trips);
+		tripList.dataset.storeId = storeId;
 	}
 
 	async function displayCartItems(tripId) {
@@ -109,7 +110,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 			e.target.reset();
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+		}
+	}
+
+	async function addNewTrip(e) {
+		e.preventDefault();
+
+		const date = e.target.elements["date"].value;
+		const storeId = tripList.dataset.storeId;
+
+		try {
+			const res = await fetch("http://localhost:3000/trips", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					date,
+					storeId,
+				}),
+			});
+
+			const data = await res.json();
+
+			console.log("trip has been successfully created ", data);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 });
