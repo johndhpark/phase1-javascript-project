@@ -161,19 +161,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 		delBtn.textContent = "delete";
 		delBtn.addEventListener("click", async (e) => {
 			e.preventDefault();
-
-			try {
-				await fetch(`http://localhost:3000/items/${id}`, {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
-
-				filterRemovedItem(li);
-			} catch (error) {
-				console.error(error);
-			}
+			removeCartItem(id);
+			cartList.removeChild(li);
 		});
 
 		li.textContent = description;
@@ -200,8 +189,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return li;
 	}
 
-	// Filter the removed item from the cart list
-	function filterRemovedItem(li) {
-		cartList.removeChild(li);
+	async function removeCartItem(itemId) {
+		try {
+			await fetch(`http://localhost:3000/items/${itemId}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		} catch (error) {
+			console.error(error);
+		}
 	}
 });
