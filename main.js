@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const stores = await res.json();
 
 	// Iterate through each store and create an list item element to display
-	const listItems = stores.map(({ id, name, trips }) => {
+	const tripList = stores.map(({ id, name, trips }) => {
 		const storeEl = document.createElement("li");
 		storeEl.textContent = name;
 
@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 			// Update the trip list
+			cartContainer.replaceChildren();
 			tripContainer.replaceChildren(...storeTrips);
 		});
 
@@ -44,5 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	});
 
 	// Append the stores to ul
-	storeContainer.append(...listItems);
+	cartContainer.replaceChildren();
+	storeContainer.replaceChildren(...tripList);
 });
