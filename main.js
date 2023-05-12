@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Iterate through each store trip and create a list element
 		const storeTrips = trips
-			.filter((trip) => trip.storeId === storeId)
+			.filter((trip) => parseInt(trip.storeId) === storeId)
 			.map(({ id, date }) => {
 				const tripEl = document.createElement("li");
 				tripEl.textContent = date;
@@ -58,9 +58,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const res = await fetch("http://localhost:3000/items");
 		const items = await res.json();
 
+		console.log(items);
+
 		// Iterate throgh each cart item and create a list element
 		const cartItems = items
-			.filter((item) => item.tripId === tripId)
+			.filter((item) => parseInt(item.tripId) === tripId)
 			.map(({ description }) => {
 				const cartEl = document.createElement("li");
 				cartEl.textContent = description;
@@ -68,6 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 		// Update the cart list
+		console.log(cartItems);
 		cartContainer.replaceChildren(...cartItems);
 	}
 
@@ -106,5 +109,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 		} catch (error) {
 			console.log(error);
 		}
-	}
+	=}
 });
