@@ -15,36 +15,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Clicking on the store name will display the list of trips
 		storeEl.addEventListener("click", (e) => {
-			// Iterate through each store trip and create a list element
-			const storeTrips = trips.map(({ date, items, total_spent }) => {
-				const tripEl = document.createElement("li");
-				tripEl.textContent = date;
-
-				tripEl.addEventListener("click", (e) => {
-					const cartItems = items.map(({ name }) => {
-						const cartEl = document.createElement("li");
-
-						cartEl.textContent = name;
-
-						return cartEl;
-					});
-
-					// Update the cart list
-					cartContainer.replaceChildren(...cartItems);
-				});
-
-				return tripEl;
-			});
-
-			// Update the trip list
-			cartContainer.replaceChildren();
-			tripContainer.replaceChildren(...storeTrips);
+			displayStoreTrips(trips);
 		});
-
 		return storeEl;
 	});
 
 	// Append the stores to ul
 	cartContainer.replaceChildren();
 	storeContainer.replaceChildren(...tripList);
+
+	/*
+		CALLBACK FUNCTIONS
+	*/
+
+	function displayStoreTrips(trips) {
+		// Iterate through each store trip and create a list element
+		const storeTrips = trips.map(({ date, items, total_spent }) => {
+			const tripEl = document.createElement("li");
+			tripEl.textContent = date;
+
+			tripEl.addEventListener("click", (e) => {
+				displayCartItems(items);
+			});
+
+			return tripEl;
+		});
+
+		// Update the trip list
+		cartContainer.replaceChildren();
+		tripContainer.replaceChildren(...storeTrips);
+	}
+
+	function displayCartItems(items) {
+		// Iterate throgh each cart item and create a list element
+		const cartItems = items.map(({ name }) => {
+			const cartEl = document.createElement("li");
+			cartEl.textContent = name;
+			return cartEl;
+		});
+
+		// Update the cart list
+		cartContainer.replaceChildren(...cartItems);
+	}
 });
