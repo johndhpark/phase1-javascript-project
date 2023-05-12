@@ -25,42 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	cartContainer.replaceChildren();
 	storeContainer.replaceChildren(...tripList);
 
-	cartForm.addEventListener("submit", async (e) => {
-		e.preventDefault();
-
-		// Get the form data
-		const description = e.target.elements["description"].value;
-		const memo = e.target.elements["memo"].value;
-		const quantity = e.target.elements["quantity"].value;
-		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
-		const tripId = tripContainer.dataset.storeId;
-		const purchased = false;
-
-		try {
-			const res = await fetch("http://localhost:3000/items", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-				},
-				body: JSON.stringify({
-					description,
-					tripId,
-					memo,
-					quantity,
-					price,
-					purchased,
-				}),
-			});
-
-			const data = await res.json();
-			console.log("item has successfully been added to the cart ", data);
-
-			e.target.reset();
-		} catch (error) {
-			console.log(error);
-		}
-	});
+	cartForm.addEventListener("submit", addNewCartItem);
 
 	/*
 		EVENT HANDLERS
@@ -104,5 +69,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Update the cart list
 		cartContainer.replaceChildren(...cartItems);
+	}
+
+	async function addNewCartItem(e) {
+		e.preventDefault();
+
+		// Get the form data
+		const description = e.target.elements["description"].value;
+		const memo = e.target.elements["memo"].value;
+		const quantity = e.target.elements["quantity"].value;
+		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
+		const tripId = tripContainer.dataset.storeId;
+		const purchased = false;
+
+		try {
+			const res = await fetch("http://localhost:3000/items", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					description,
+					tripId,
+					memo,
+					quantity,
+					price,
+					purchased,
+				}),
+			});
+
+			const data = await res.json();
+			console.log("item has successfully been added to the cart ", data);
+
+			e.target.reset();
+		} catch (error) {
+			console.log(error);
+		}
 	}
 });
