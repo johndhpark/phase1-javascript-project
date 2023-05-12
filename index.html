@@ -9,28 +9,49 @@
 	</head>
 
 	<body>
-		<h1>Stores</h1>
-		<ul id="store-list"></ul>
-		<ul id="trip-list"></ul>
-		<ul id="cart-list"></ul>
 		<div>
-			<form id="cart-form">
-				<input type="text" name="description" placeholder="description" />
-				<input type="text" name="memo" placeholder="memo" />
-				<select name="quantity">
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-				</select>
-				<input type="text" name="price" placeholder="price" />
-				<button type="submit">Add to Cart</button>
-			</form>
+			<h1>Stores</h1>
+			<ul id="store-list"></ul>
+		</div>
+		<div>
+			<h1>Trips</h1>
+			<ul id="trip-list"></ul>
+			<div>
+				<h2>Add New Trip</h2>
+				<form id="trip-form">
+					<input type="date" name="date" placeholder="date" required />
+					<button type="submit">Create New Trip</button>
+				</form>
+			</div>
+		</div>
+		<div>
+			<h1>Shopping Cart</h1>
+			<ul id="cart-list"></ul>
+			<div>
+				<h2>Add New Cart Item</h2>
+				<form id="cart-form">
+					<input
+						type="text"
+						name="description"
+						placeholder="description"
+						required
+					/>
+					<input type="text" name="memo" placeholder="memo" />
+					<select name="quantity">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+					</select>
+					<input type="text" name="price" placeholder="price" required />
+					<button type="submit">Add to Cart</button>
+				</form>
+			</div>
 		</div>
 	</body>
 </html>
