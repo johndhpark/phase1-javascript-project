@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const stores = await res.json();
 
 	// Iterate through each store and create an list item element to display
-	const tripList = stores.map(({ id, name, trips }) => {
+	const tripList = stores.map(({ id, name }) => {
 		const storeEl = document.createElement("li");
 		storeEl.textContent = name;
 
 		// Clicking on the store name will display the list of trips
 		storeEl.addEventListener("click", (e) => {
-			displayStoreTrips(trips);
+			displayStoreTrips(id);
 		});
 		return storeEl;
 	});
@@ -28,18 +28,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 		CALLBACK FUNCTIONS
 	*/
 
-	function displayStoreTrips(trips) {
+	async function displayStoreTrips(storeId) {
+		const res = await fetch("http://localhost:3000/trips");
+		const trips = await res.json();
+
 		// Iterate through each store trip and create a list element
-		const storeTrips = trips.map(({ date, items, total_spent }) => {
-			const tripEl = document.createElement("li");
-			tripEl.textContent = date;
+		const storeTrips = trips
+			.filter((trip) => trip.storeId === storeId)
+			.map(({ date }) => {
+				const tripEl = document.createElement("li");
+				tripEl.textContent = date;
 
-			tripEl.addEventListener("click", (e) => {
-				displayCartItems(items);
+				tripEl.addEventListener("click", (e) => {
+					displayCartItems(items);
+				});
+
+				return tripEl;
 			});
-
-			return tripEl;
-		});
 
 		// Update the trip list
 		cartContainer.replaceChildren();
