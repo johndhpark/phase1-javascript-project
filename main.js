@@ -68,9 +68,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		// Get the form data
 		const description = e.target.elements["description"].value;
 		const memo = e.target.elements["memo"].value;
-		const quantity = e.target.elements["quantity"].value;
+		const quantity = parseInt(e.target.elements["quantity"].value);
 		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
-		const tripId = cartList.dataset.tripId;
+		const tripId = parseInt(cartList.dataset.tripId);
 		const purchased = false;
 
 		try {
@@ -194,10 +194,81 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	// Creates a new list element for cart item
-	function createNewItem({ id, description }) {
+	function createNewItem({ id, description, memo, quantity, price }) {
 		const li = document.createElement("li");
+
 		li.dataset.itemId = id;
-		li.textContent = description;
+
+		const descSpan = document.createElement("span");
+
+		descSpan.textContent = memo;
+
+		li.appendChild(descSpan);
+
+		const memoSpan = document.createElement("span");
+		memoSpan.textContent = description;
+		li.appendChild(memoSpan);
+
+		const quantityContainerSpan = document.createElement("span");
+		const quantityContentSpan = document.createElement("span");
+		quantityContentSpan.textContent = quantity;
+
+		const decBtn = document.createElement("button");
+		decBtn.textContent = "-";
+		decBtn.addEventListener("click", async (e) => {
+			quantity -= 1;
+
+			if (quantity === 0) {
+				deleteCartItem(id);
+				cartList.removeChild(li);
+			} else {
+				const res = await fetch(`http://localhost:3000/items/${id}`, {
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+						Accept: "application/json",
+					},
+					body: JSON.stringify({
+						quantity,
+					}),
+				});
+
+				const data = await res.json();
+
+				quantityContentSpan.textContent = quantity;
+
+				console.log(data);
+			}
+		});
+
+		const incBtn = document.createElement("button");
+		incBtn.textContent = "+";
+		incBtn.addEventListener("click", async (e) => {
+			quantity = parseInt(quantity) + 1;
+
+			const res = await fetch(`http://localhost:3000/items/${id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					quantity,
+				}),
+			});
+
+			const data = await res.json();
+
+			quantityContentSpan.textContent = quantity;
+
+			console.log(data);
+		});
+
+		quantityContainerSpan.appendChild(decBtn);
+		quantityContainerSpan.appendChild(quantityContentSpan);
+		quantityContainerSpan.appendChild(incBtn);
+
+		li.appendChild(quantityContainerSpan);
 
 		const delBtn = document.createElement("button");
 		delBtn.textContent = "delete item";
@@ -205,6 +276,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 			deleteCartItem(id);
 			cartList.removeChild(li);
 		});
+
+		const priceSpan = document.createElement("span");
+		priceSpan.textContent = `$${price}`;
+		li.appendChild(priceSpan);
 
 		li.appendChild(delBtn);
 
