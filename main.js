@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", async () => {
-	// First, get the references to 3 ul lists.
 	const storeContainer = document.querySelector("ul#store-list");
 	const tripContainer = document.querySelector("ul#trip-list");
 	const cartContainer = document.querySelector("ul#cart-list");
+
+	const cartForm = document.querySelector("form#cart-form");
 
 	// Then, make a fetch request to http://localhost:3000/stores.
 	const res = await fetch("http://localhost:3000/stores");
@@ -24,8 +25,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 	cartContainer.replaceChildren();
 	storeContainer.replaceChildren(...tripList);
 
+	cartForm.addEventListener("submit", (e) => {
+		e.preventDefault();
+		console.log("submitted");
+	});
+
 	/*
-		CALLBACK FUNCTIONS
+		EVENT HANDLERS
 	*/
 
 	async function displayStoreTrips(storeId) {
