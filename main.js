@@ -222,18 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 				deleteCartItem(id);
 				cartList.removeChild(li);
 			} else {
-				const res = await fetch(`http://localhost:3000/items/${id}`, {
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-						Accept: "application/json",
-					},
-					body: JSON.stringify({
-						quantity,
-					}),
-				});
-
-				const data = await res.json();
+				updateQuantity(quantity);
 
 				quantityContentSpan.textContent = quantity;
 
@@ -246,18 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		incBtn.addEventListener("click", async (e) => {
 			quantity = parseInt(quantity) + 1;
 
-			const res = await fetch(`http://localhost:3000/items/${id}`, {
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-				},
-				body: JSON.stringify({
-					quantity,
-				}),
-			});
-
-			const data = await res.json();
+			updateQuantity(quantity);
 
 			quantityContentSpan.textContent = quantity;
 
@@ -322,6 +300,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 		} catch (error) {
 			console.error(error);
+		}
+	}
+
+	async function updateQuantity(itemId, quantity) {
+		try {
+			await fetch(`http://localhost:3000/items/${id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					quantity,
+				}),
+			});
+		} catch (error) {
+			console.erorr(error);
 		}
 	}
 });
