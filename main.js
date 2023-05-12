@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		// Update the trip list
 		cartContainer.replaceChildren();
 		tripContainer.replaceChildren(...storeTrips);
+		tripContainer.dataset.storeId = storeId;
 	}
 
 	async function displayCartItems(tripId) {
@@ -72,6 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		// Update the cart list
 		console.log(cartItems);
 		cartContainer.replaceChildren(...cartItems);
+		cartContainer.dataset.tripId = tripId;
 	}
 
 	async function addNewCartItem(e) {
@@ -82,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const memo = e.target.elements["memo"].value;
 		const quantity = e.target.elements["quantity"].value;
 		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
-		const tripId = tripContainer.dataset.storeId;
+		const tripId = cartContainer.dataset.tripId;
 		const purchased = false;
 
 		try {
@@ -109,5 +111,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 		} catch (error) {
 			console.log(error);
 		}
-	=}
+	}
 });
