@@ -35,12 +35,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 		// Iterate through each store trip and create a list element
 		const storeTrips = trips
 			.filter((trip) => trip.storeId === storeId)
-			.map(({ date }) => {
+			.map(({ id, date }) => {
 				const tripEl = document.createElement("li");
 				tripEl.textContent = date;
 
 				tripEl.addEventListener("click", (e) => {
-					displayCartItems(items);
+					displayCartItems(id);
 				});
 
 				return tripEl;
@@ -51,13 +51,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 		tripContainer.replaceChildren(...storeTrips);
 	}
 
-	function displayCartItems(items) {
+	async function displayCartItems(tripId) {
+		const res = await fetch("http://localhost:3000/items");
+		const items = await res.json();
+
 		// Iterate throgh each cart item and create a list element
-		const cartItems = items.map(({ name }) => {
-			const cartEl = document.createElement("li");
-			cartEl.textContent = name;
-			return cartEl;
-		});
+		const cartItems = items
+			.filter((item) => item.tripId === tripId)
+			.map(({ description }) => {
+				const cartEl = document.createElement("li");
+				cartEl.textContent = description;
+				return cartEl;
+			});
 
 		// Update the cart list
 		cartContainer.replaceChildren(...cartItems);
