@@ -9,14 +9,14 @@
 					"items": [
 						{
 							"name": "Organic Valley Unsalted Organic Butter from Pasture Raised Cows, 16 Oz, 4 Count",
-							"note": "",
+							"shopping_note": "",
 							"quantity": 2,
 							"price": 8.69,
 							"url": "https://www.amazon.com/gp/product/B08X9LB2F3/ref=ox_sc_act_title_1?smid=A38IU2BEPK2NXH&almBrandId=QW1hem9uIEZyZXNo&psc=1&fpw=alm",
 							"purchased": false
 						}
 					],
-					"total_spent": 0.0
+					"spent": 0.0
 				}
 			]
 		},
