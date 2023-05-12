@@ -120,6 +120,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 			const newTrip = await res.json();
+			const listEl = createNewTrip(newTrip);
+			tripList.append(listEl);
 		} catch (error) {
 			console.error(error);
 		}
@@ -143,15 +145,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 			const newStore = await res.json();
+			const listEl = createNewStore(newStore);
+			storeList.append(listEl);
 
 			console.log("Store has been successfully created: ", data);
 		} catch (error) {}
 	}
 
 	// Creates a new list element for cart item
-	function createNewItem({ description }) {
+	function createNewItem({ id, description }) {
+		console.log(id);
+
 		const li = document.createElement("li");
+		const delBtn = document.createElement("button");
+		delBtn.textContent = "delete";
+		delBtn.addEventListener("click", async (e) => {
+			e.preventDefault();
+
+			try {
+				await fetch(`http://localhost:3000/items/${id}`, {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+
+				filterRemovedItem(li);
+			} catch (error) {
+				console.error(error);
+			}
+		});
+
 		li.textContent = description;
+		li.appendChild(delBtn);
 
 		return li;
 	}
@@ -165,11 +191,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return li;
 	}
 
+	// Create a new list eleemnt for store
 	function createNewStore({ id, name }) {
 		const li = document.createElement("li");
 		li.textContent = name;
 
 		li.addEventListener("click", () => displayTrips(id));
 		return li;
+	}
+
+	// Filter the removed item from the cart list
+	function filterRemovedItem(li) {
+		cartList.removeChild(li);
 	}
 });
