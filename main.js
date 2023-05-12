@@ -152,20 +152,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 		} catch (error) {}
 	}
 
-	// Creates a new list element for cart item
-	function createNewItem({ id, description }) {
-		console.log(id);
-
+	// Create a new list eleemnt for store
+	function createNewStore({ id, name }) {
 		const li = document.createElement("li");
+		li.textContent = name;
+
+		li.addEventListener("click", () => displayTrips(id));
+
 		const delBtn = document.createElement("button");
-		delBtn.textContent = "delete";
-		delBtn.addEventListener("click", async (e) => {
-			e.preventDefault();
-			removeCartItem(id);
-			cartList.removeChild(li);
+		delBtn.textContent = "delete store";
+
+		delBtn.addEventListener("click", (e) => {
+			deleteStore(id);
+			storeList.removeChild(li);
 		});
 
-		li.textContent = description;
 		li.appendChild(delBtn);
 
 		return li;
@@ -176,22 +177,69 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const li = document.createElement("li");
 		li.textContent = date;
 
-		li.addEventListener("click", () => displayCartItems(id));
+		li.addEventListener("click", (e) => {
+			displayCartItems(id);
+		});
+
+		const delBtn = document.createElement("button");
+		delBtn.textContent = "delete trip";
+
+		delBtn.addEventListener("click", (e) => {
+			deleteTrip(id);
+		});
+
+		li.appendChild(delBtn);
+
 		return li;
 	}
 
-	// Create a new list eleemnt for store
-	function createNewStore({ id, name }) {
+	// Creates a new list element for cart item
+	function createNewItem({ id, description }) {
 		const li = document.createElement("li");
-		li.textContent = name;
+		li.dataset.itemId = id;
+		li.textContent = description;
 
-		li.addEventListener("click", () => displayTrips(id));
+		const delBtn = document.createElement("button");
+		delBtn.textContent = "delete item";
+		delBtn.addEventListener("click", (e) => {
+			deleteCartItem(id);
+			cartList.removeChild(li);
+		});
+
+		li.appendChild(delBtn);
+
 		return li;
 	}
 
-	async function removeCartItem(itemId) {
+	async function deleteCartItem(itemId) {
 		try {
 			await fetch(`http://localhost:3000/items/${itemId}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function deleteTrip(tripId) {
+		try {
+			await fetch(`http://localhost:3000/trips/${tripId}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function deleteStore(storeId) {
+		try {
+			await fetch(`http://localhost:3000/stores/${storeId}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
