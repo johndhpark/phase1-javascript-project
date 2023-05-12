@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
 	const storeList = document.querySelector("ul#store-list");
 	const tripList = document.querySelector("ul#trip-list");
-	const cartContainer = document.querySelector("ul#cart-list");
+	const cartList = document.querySelector("ul#cart-list");
 
 	const cartForm = document.querySelector("form#cart-form");
 	const tripForm = document.querySelector("form#trip-form");
+	const storeForm = document.querySelector("form#store-form");
 
 	// Then, make a fetch request to http://localhost:3000/stores.
 	const res = await fetch("http://localhost:3000/stores");
@@ -21,12 +22,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 	});
 
 	// Append the stores to ul
-	cartContainer.replaceChildren();
+	cartList.replaceChildren();
 	storeList.replaceChildren(...stores);
 
 	// Add the submit event listeners to forms
-	cartForm.addEventListener("submit", addNewCartItem);
-	tripForm.addEventListener("submit", addNewTrip);
+	cartForm.addEventListener("submit", addItem);
+	tripForm.addEventListener("submit", addTrip);
+	storeForm.addEventListener("submit", addStore);
 
 	/*
 		EVENT HANDLERS
@@ -51,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 		// Update the trip list
-		cartContainer.replaceChildren();
+		cartList.replaceChildren();
 		tripList.replaceChildren(...trips);
 		tripList.dataset.storeId = storeId;
 	}
@@ -73,11 +75,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Update the cart list
 		console.log(cartItems);
-		cartContainer.replaceChildren(...cartItems);
-		cartContainer.dataset.tripId = tripId;
+		cartList.replaceChildren(...cartItems);
+		cartList.dataset.tripId = tripId;
 	}
 
-	async function addNewCartItem(e) {
+	async function addItem(e) {
 		e.preventDefault();
 
 		// Get the form data
@@ -85,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const memo = e.target.elements["memo"].value;
 		const quantity = e.target.elements["quantity"].value;
 		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
-		const tripId = cartContainer.dataset.tripId;
+		const tripId = cartList.dataset.tripId;
 		const purchased = false;
 
 		try {
@@ -114,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		}
 	}
 
-	async function addNewTrip(e) {
+	async function addTrip(e) {
 		e.preventDefault();
 
 		const date = e.target.elements["date"].value;
@@ -139,5 +141,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 		} catch (error) {
 			console.error(error);
 		}
+	}
+
+	async function addStore(e) {
+		e.preventDefault();
+
+		console.log("store form submitted");
+
+		const name = e.target.elements["name"].value;
+
+		try {
+			const res = await fetch("http://localhost:3000/stores", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					name,
+				}),
+			});
+
+			const data = await res.json();
+
+			console.log("Store has been successfully created: ", data);
+		} catch (error) {}
 	}
 });
