@@ -24,13 +24,20 @@
 					<div>
 						<h2>Add New Store</h2>
 						<form id="store-form">
-							<input
-								type="text"
-								name="name"
-								placeholder="store name"
-								required
-							/>
-							<button type="submit">Create New Store</button>
+							<div class="mb-3">
+								<label for="storeNameInput" class="form-label"
+									>Store Name</label
+								>
+								<input
+									type="text"
+									class="form-control"
+									id="storeNameInput"
+									name="name"
+									required
+								/>
+							</div>
+
+							<button type="submit" class="btn btn-primary">Submit</button>
 						</form>
 					</div>
 				</div>
