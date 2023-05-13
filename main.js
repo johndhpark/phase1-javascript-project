@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
-	const storeList = document.querySelector("ul#store-list");
-	const tripList = document.querySelector("ul#trip-list");
-	const cartList = document.querySelector("ul#cart-list");
+	const storeList = document.querySelector("#store-list");
+	const tripList = document.querySelector("#trip-list");
+	const cartList = document.querySelector("#cart-list");
 
 	const cartForm = document.querySelector("form#cart-form");
 	const tripForm = document.querySelector("form#trip-form");
@@ -165,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	function createNewStore({ id, name }) {
 		const li = document.createElement("li");
 		li.textContent = name;
+		li.classList.add("list-group-item", "list-group-item-action");
 
 		li.addEventListener("click", () => displayTrips(id));
 
