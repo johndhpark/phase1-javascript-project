@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 		cartList.replaceChildren();
 		tripList.replaceChildren(...trips);
 		storeList.dataset.selectedStoreId = storeId;
+
+		for (const store of storeList.children) {
+			if (store.dataset.storeId != storeId) store.classList.remove("active");
+			else store.classList.add("active");
+		}
 	}
 
 	async function displayCartItems(tripId) {
@@ -166,11 +171,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const li = document.createElement("li");
 		li.textContent = name;
 		li.classList.add("list-group-item", "list-group-item-action");
+		li.dataset.storeId = id;
 
 		li.addEventListener("click", () => displayTrips(id));
 
 		const delBtn = document.createElement("button");
-		delBtn.textContent = "delete store";
+		delBtn.classList.add("btn", "btn-danger", "btn-sm");
+		delBtn.textContent = "delete";
 
 		delBtn.addEventListener("click", (e) => {
 			deleteStore(id);
@@ -186,6 +193,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	function createNewTrip({ id, date }) {
 		const li = document.createElement("li");
 		li.textContent = date;
+		li.classList.add("list-group-item", "list-group-item-action");
 
 		li.addEventListener("click", (e) => {
 			displayCartItems(id);
