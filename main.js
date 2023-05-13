@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			.map((trip) => createNewTrip(trip));
 
 		// Update the trip list
+		delete tripList.dataset.selectedId;
 		tripList.replaceChildren(...trips);
 		cartList.replaceChildren();
 	}
