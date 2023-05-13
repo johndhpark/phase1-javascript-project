@@ -176,8 +176,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		li.addEventListener("click", () => displayTrips(id));
 
 		const delBtn = document.createElement("button");
-		delBtn.classList.add("btn", "btn-danger", "btn-sm");
-		delBtn.textContent = "delete";
+		delBtn.classList.add("btn", "btn-outline-danger", "btn-sm");
+		delBtn.textContent = "x";
+		delBtn.setAttribute("title", "delete store");
 
 		delBtn.addEventListener("click", (e) => {
 			deleteStore(id);
@@ -215,7 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	// Creates a new list element for cart item
 	function createNewCartItem({ id, description, memo, quantity, price }) {
 		const li = document.createElement("li");
-
+		li.classList.add("list-group-item");
 		li.dataset.itemId = id;
 
 		const descSpan = document.createElement("span");
