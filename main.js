@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		// Update the trip list
 		cartList.replaceChildren();
 		tripList.replaceChildren(...trips);
-		tripList.dataset.storeId = storeId;
+		storeList.dataset.selectedStoreId = storeId;
 	}
 
 	async function displayCartItems(tripId) {
@@ -58,7 +58,70 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Update the cart list
 		cartList.replaceChildren(...cartItems);
-		cartList.dataset.tripId = tripId;
+		tripList.dataset.selectedTripId = tripId;
+	}
+
+	async function submitStore(e) {
+		e.preventDefault();
+
+		const name = e.target.elements["name"].value;
+
+		try {
+			const res = await fetch("http://localhost:3000/stores", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					name,
+				}),
+			});
+
+			const newStore = await res.json();
+			const listEl = createNewStore(newStore);
+
+			storeList.dataset.selectedStoreId = newStore.id;
+
+			tripList.replaceChildren();
+			cartList.replaceChildren();
+
+			delete tripList.dataset.selectedTripId;
+
+			storeList.append(listEl);
+
+			e.target.reset();
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function submitTrip(e) {
+		e.preventDefault();
+
+		const date = e.target.elements["date"].value;
+		const storeId = parseInt(storeList.dataset.selectedStoreId);
+
+		try {
+			const res = await fetch("http://localhost:3000/trips", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					date,
+					storeId,
+				}),
+			});
+
+			const newTrip = await res.json();
+			const listEl = createNewTrip(newTrip);
+			tripList.append(listEl);
+			e.target.reset();
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async function submitItem(e) {
@@ -69,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const memo = e.target.elements["memo"].value;
 		const quantity = parseInt(e.target.elements["quantity"].value);
 		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
-		const tripId = parseInt(cartList.dataset.tripId);
+		const tripId = parseInt(tripList.dataset.selectedTripId);
 		const purchased = false;
 
 		try {
@@ -92,60 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			const item = await res.json();
 			const listEl = createNewCartItem(item);
 			cartList.append(listEl);
-
 			e.target.reset();
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	async function submitTrip(e) {
-		e.preventDefault();
-
-		const date = e.target.elements["date"].value;
-		const storeId = tripList.dataset.storeId;
-
-		try {
-			const res = await fetch("http://localhost:3000/trips", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-				},
-				body: JSON.stringify({
-					date,
-					storeId,
-				}),
-			});
-
-			const newTrip = await res.json();
-			const listEl = createNewTrip(newTrip);
-			tripList.append(listEl);
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	async function submitStore(e) {
-		e.preventDefault();
-
-		const name = e.target.elements["name"].value;
-
-		try {
-			const res = await fetch("http://localhost:3000/stores", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Accept: "application/json",
-				},
-				body: JSON.stringify({
-					name,
-				}),
-			});
-
-			const newStore = await res.json();
-			const listEl = createNewStore(newStore);
-			storeList.append(listEl);
 		} catch (error) {
 			console.error(error);
 		}
@@ -185,6 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		delBtn.addEventListener("click", (e) => {
 			deleteTrip(id);
+			tripList.remove(li);
 		});
 
 		li.appendChild(delBtn);
@@ -222,7 +233,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 				deleteCartItem(id);
 				cartList.removeChild(li);
 			} else {
-				updateItemQuantity(quantity);
+				updateItemQuantity(id, quantity);
 
 				quantityContentSpan.textContent = quantity;
 			}
@@ -233,7 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		incBtn.addEventListener("click", async (e) => {
 			quantity = parseInt(quantity) + 1;
 
-			updateItemQuantity(quantity);
+			updateItemQuantity(id, quantity);
 
 			quantityContentSpan.textContent = quantity;
 		});
@@ -301,7 +312,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	async function updateItemQuantity(itemId, quantity) {
 		try {
-			await fetch(`http://localhost:3000/items/${id}`, {
+			await fetch(`http://localhost:3000/items/${itemId}`, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
@@ -312,7 +323,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 				}),
 			});
 		} catch (error) {
-			console.erorr(error);
+			console.error(error);
 		}
 	}
 });
