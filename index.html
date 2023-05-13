@@ -48,14 +48,14 @@
 						<form id="trip-form">
 							<div class="form-floating mb-3">
 								<input
-									type="text"
+									type="date"
 									class="form-control"
-									id="storeNameInput"
-									name="name"
-									placeholder="Whole Foods"
+									id="dateInput"
+									name="date"
+									placeholder="2023-05-12"
 									required
 								/>
-								<label for="storeNameInput">Store Name</label>
+								<label for="storeNameInput">Select Date</label>
 							</div>
 
 							<button type="submit" class="btn btn-primary">Submit</button>
@@ -68,26 +68,54 @@
 					<div>
 						<h2>Add New Cart Item</h2>
 						<form id="cart-form">
-							<input
-								type="text"
-								name="description"
-								placeholder="description"
-								required
-							/>
-							<input type="text" name="memo" placeholder="memo" />
-							<select name="quantity">
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-							</select>
-							<input type="text" name="price" placeholder="price" required />
-							<button type="submit">Add to Cart</button>
+							<div class="form-floating mb-3">
+								<input
+									type="text"
+									class="form-control"
+									id="descriptionInput"
+									name="description"
+									placeholder="description"
+									required
+								/>
+								<label for="descriptionInput">Description</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+									type="text"
+									class="form-control"
+									id="memoInput"
+									name="memo"
+									placeholder="Memo"
+								/>
+								<label for="memoInput">Memo</label>
+							</div>
+							<div class="mb-3">
+								<select class="form-select" name="quantity">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+								</select>
+							</div>
+							<div class="form-floating mb-3">
+								<input
+									type="text"
+									class="form-control"
+									id="priceInput"
+									name="price"
+									placeholder="0.00"
+									required
+								/>
+								<label for="priceInput">Price</label>
+							</div>
+							<div class="text-center">
+								<button class="btn btn-primary" type="submit">Submit</button>
+							</div>
 						</form>
 					</div>
 				</div>
