@@ -42,14 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 			.map((trip) => createNewTrip(trip));
 
 		// Update the trip list
-		cartList.replaceChildren();
 		tripList.replaceChildren(...trips);
-		storeList.dataset.selectedStoreId = storeId;
-
-		for (const store of storeList.children) {
-			if (store.dataset.storeId != storeId) store.classList.remove("active");
-			else store.classList.add("active");
-		}
+		cartList.replaceChildren();
 	}
 
 	async function displayCartItems(tripId) {
@@ -63,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		// Update the cart list
 		cartList.replaceChildren(...cartItems);
-		tripList.dataset.selectedTripId = tripId;
+		tripList.dataset.selectedId = tripId;
 	}
 
 	async function submitStore(e) {
@@ -86,12 +80,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 			const newStore = await res.json();
 			const listEl = createNewStore(newStore);
 
-			storeList.dataset.selectedStoreId = newStore.id;
+			storeList.dataset.selectedId = newStore.id;
 
 			tripList.replaceChildren();
 			cartList.replaceChildren();
 
-			delete tripList.dataset.selectedTripId;
+			delete tripList.dataset.selectedId;
 
 			storeList.append(listEl);
 
@@ -105,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		e.preventDefault();
 
 		const date = e.target.elements["date"].value;
-		const storeId = parseInt(storeList.dataset.selectedStoreId);
+		const storeId = parseInt(storeList.dataset.selectedId);
 
 		try {
 			const res = await fetch("http://localhost:3000/trips", {
@@ -137,7 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const memo = e.target.elements["memo"].value;
 		const quantity = parseInt(e.target.elements["quantity"].value);
 		const price = parseFloat(e.target.elements["price"].value).toFixed(2);
-		const tripId = parseInt(tripList.dataset.selectedTripId);
+		const tripId = parseInt(tripList.dataset.selectedId);
 		const purchased = false;
 
 		try {
@@ -173,12 +167,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 		li.classList.add("list-group-item", "list-group-item-action");
 		li.dataset.storeId = id;
 
-		li.addEventListener("click", () => displayTrips(id));
+		li.addEventListener("click", () => {
+			displayTrips(id);
+
+			storeList.dataset.selectedId = id;
+
+			// Iterate through each store list item and see if its id
+			// matches the selected store id. If true, add class of "active".
+			// If not, remove class of "active".
+			for (const store of storeList.children) {
+				if (store.dataset.storeId != id) store.classList.remove("active");
+				else store.classList.add("active");
+			}
+		});
 
 		const delBtn = document.createElement("button");
 		delBtn.classList.add("btn", "btn-outline-danger", "btn-sm");
 		delBtn.textContent = "x";
-		delBtn.setAttribute("title", "delete store");
+		delBtn.setAttribute("title", `delete ${name} store`);
 
 		delBtn.addEventListener("click", (e) => {
 			deleteStore(id);
@@ -195,13 +201,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const li = document.createElement("li");
 		li.textContent = date;
 		li.classList.add("list-group-item", "list-group-item-action");
+		li.dataset.tripId = id;
 
 		li.addEventListener("click", (e) => {
 			displayCartItems(id);
+
+			storeList.dataset.selectedId = id;
+
+			// Iterate through each trip list item and see if its id
+			// matches the selected store id. If true, add class of "active".
+			// If not, remove class of "active".
+			for (const trip of tripList.children) {
+				if (trip.dataset.tripId != id) trip.classList.remove("active");
+				else trip.classList.add("active");
+			}
 		});
 
 		const delBtn = document.createElement("button");
-		delBtn.textContent = "delete trip";
+		delBtn.classList.add("btn", "btn-outline-danger", "btn-sm");
+		delBtn.textContent = "x";
+		delBtn.setAttribute("title", `delete ${date} trip`);
 
 		delBtn.addEventListener("click", (e) => {
 			deleteTrip(id);
@@ -235,6 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		const decBtn = document.createElement("button");
 		decBtn.textContent = "-";
+
 		decBtn.addEventListener("click", async (e) => {
 			quantity -= 1;
 
@@ -281,14 +301,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return li;
 	}
 
-	async function deleteCartItem(itemId) {
+	async function deleteStore(storeId) {
+		console.log(storeId);
+
 		try {
-			await fetch(`http://localhost:3000/items/${itemId}`, {
+			const res = await fetch(`http://localhost:3000/stores/${storeId}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
+
+			const data = await res.json();
+
+			console.log(data);
 		} catch (error) {
 			console.error(error);
 		}
@@ -307,9 +333,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		}
 	}
 
-	async function deleteStore(storeId) {
+	async function deleteCartItem(itemId) {
 		try {
-			await fetch(`http://localhost:3000/stores/${storeId}`, {
+			await fetch(`http://localhost:3000/items/${itemId}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
