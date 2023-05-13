@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	EVENT HANDLERS
 	
 	=========================================================== */
-
 	async function displayStores() {
 		// Then, make a fetch request to http://localhost:3000/stores.
 		const res = await fetch("http://localhost:3000/stores");
@@ -55,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		// Iterate throgh each cart item and create a list element
 		const cartItems = items
 			.filter((item) => parseInt(item.tripId) === tripId)
-			.map((item) => createNewItem(item));
+			.map((item) => createNewCartItem(item));
 
 		// Update the cart list
 		cartList.replaceChildren(...cartItems);
@@ -91,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 			const item = await res.json();
-			const listEl = createNewItem(item);
+			const listEl = createNewCartItem(item);
 			cartList.append(listEl);
 
 			e.target.reset();
@@ -147,9 +146,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 			const newStore = await res.json();
 			const listEl = createNewStore(newStore);
 			storeList.append(listEl);
-
-			console.log("Store has been successfully created: ", data);
-		} catch (error) {}
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	// Create a new list eleemnt for store
@@ -194,7 +193,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	// Creates a new list element for cart item
-	function createNewItem({ id, description, memo, quantity, price }) {
+	function createNewCartItem({ id, description, memo, quantity, price }) {
 		const li = document.createElement("li");
 
 		li.dataset.itemId = id;
@@ -218,15 +217,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 		decBtn.addEventListener("click", async (e) => {
 			quantity -= 1;
 
+			// If the quantity is zero, we just delete the cart item
 			if (quantity === 0) {
 				deleteCartItem(id);
 				cartList.removeChild(li);
 			} else {
-				updateQuantity(quantity);
+				updateItemQuantity(quantity);
 
 				quantityContentSpan.textContent = quantity;
-
-				console.log(data);
 			}
 		});
 
@@ -235,11 +233,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		incBtn.addEventListener("click", async (e) => {
 			quantity = parseInt(quantity) + 1;
 
-			updateQuantity(quantity);
+			updateItemQuantity(quantity);
 
 			quantityContentSpan.textContent = quantity;
-
-			console.log(data);
 		});
 
 		quantityContainerSpan.appendChild(decBtn);
@@ -303,7 +299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		}
 	}
 
-	async function updateQuantity(itemId, quantity) {
+	async function updateItemQuantity(itemId, quantity) {
 		try {
 			await fetch(`http://localhost:3000/items/${id}`, {
 				method: "PATCH",
