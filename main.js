@@ -165,29 +165,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 	function createNewStore({ id, name }) {
 		const li = document.createElement("li");
 
-		li.classList.add(
-			"list-group-item",
-			"list-group-item-action",
+		li.classList.add("nav-item");
+		li.dataset.storeId = id;
+		li.setAttribute("title", `Select ${name}`);
+
+		const containerLink = document.createElement("a");
+		containerLink.classList.add(
+			"nav-link",
+			"link-body-emphasis",
 			"d-flex",
 			"justify-content-between",
 			"align-items-center"
 		);
-		li.dataset.storeId = id;
-		li.setAttribute("title", `Select ${name}`);
-
-		li.addEventListener("click", () => {
-			displayTrips(id);
-
-			storeList.dataset.selectedStoreId = id;
-
-			// Iterate through each store list item and see if its id
-			// matches the selected store id. If true, add class of "active".
-			// If not, remove class of "active".
-			for (const store of storeList.children) {
-				if (store.dataset.storeId != id) store.classList.remove("active");
-				else store.classList.add("active");
-			}
-		});
 
 		const textContainerSpan = document.createElement("span");
 		textContainerSpan.classList.add("d-flex", "justify-content-left");
@@ -196,7 +185,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 		shopIconSpan.classList.add("bi-shop", "margin-right-1");
 		textContainerSpan.appendChild(shopIconSpan);
 
-		li.appendChild(textContainerSpan);
+		containerLink.appendChild(textContainerSpan);
+
+		containerLink.addEventListener("click", () => {
+			displayTrips(id);
+
+			storeList.dataset.selectedStoreId = id;
+
+			// Iterate through each store list item and see if its id
+			// matches the selected store id. If true, add class of "active".
+			// If not, remove class of "active".
+			for (const store of storeList.children) {
+				const anchor = store.querySelector("a");
+
+				if (store.dataset.storeId != id) {
+					anchor.classList.remove("active");
+				} else {
+					anchor.classList.add("active");
+				}
+			}
+		});
 
 		const storeNameSpan = document.createElement("span");
 		storeNameSpan.textContent = name;
@@ -204,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		const delBtn = document.createElement("button");
 		delBtn.classList.add("btn", "btn-sm");
-		delBtn.setAttribute("title", `delete ${name} store`);
+		delBtn.setAttribute("title", `delete ${name}`);
 
 		const trashIconSpan = document.createElement("span");
 		trashIconSpan.classList.add("bi", "bi-trash3", "text-danger");
@@ -215,7 +223,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 			storeList.removeChild(li);
 		});
 
-		li.appendChild(delBtn);
+		containerLink.appendChild(delBtn);
+
+		li.appendChild(containerLink);
 
 		return li;
 	}
