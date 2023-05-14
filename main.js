@@ -162,12 +162,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	// Create a new list eleemnt for store
-	function createNewStore({ id, name }) {
+	function createNewStore({ id: storeId, name: storeName }) {
+		console.log(storeId, storeName);
 		const li = document.createElement("li");
 
 		li.classList.add("nav-item");
-		li.dataset.storeId = id;
-		li.setAttribute("title", `Select ${name}`);
+		li.dataset.storeId = storeId;
+		li.dataset.storeName = storeName;
+		li.setAttribute("title", `Select ${storeName}`);
 
 		const containerLink = document.createElement("a");
 		containerLink.classList.add(
@@ -188,26 +190,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 		containerLink.appendChild(textContainerSpan);
 
 		containerLink.addEventListener("click", () => {
-			displayTrips(id);
-
-			storeList.dataset.selectedStoreId = id;
-
-			// Iterate through each store list item and see if its id
-			// matches the selected store id. If true, add class of "active".
-			// If not, remove class of "active".
-			for (const store of storeList.children) {
-				const anchor = store.querySelector("a");
-
-				if (store.dataset.storeId != id) {
-					anchor.classList.remove("active");
-				} else {
-					anchor.classList.add("active");
-				}
-			}
+			displayTrips(storeId);
+			selectStore(storeId, storeName);
 		});
 
 		const storeNameSpan = document.createElement("span");
-		storeNameSpan.textContent = name;
+		storeNameSpan.textContent = storeName;
 		textContainerSpan.appendChild(storeNameSpan);
 
 		const delBtn = document.createElement("button");
@@ -235,14 +223,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const li = document.createElement("li");
 
 		li.classList.add(
-			"list-group-item",
-			"list-group-item-action",
+			"nav-link",
+			"link-body-emphasis",
 			"d-flex",
 			"justify-content-between",
 			"align-items-center"
 		);
 		li.dataset.tripId = id;
-		li.setAttribute("title", `Select date ${date}`);
+		li.setAttribute("title", `Select trip to {storename} on ${date}`);
 
 		li.addEventListener("click", (e) => {
 			displayCartItems(id);
@@ -369,6 +357,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 		li.appendChild(delBtn);
 
 		return li;
+	}
+
+	function selectStore(storeId, storeName) {
+		storeList.dataset.selectedStoreId = storeId;
+		storeList.dataset.selectedStoreName = storeName;
+
+		// Iterate through each store list item and see if its id
+		// matches the selected store id. If true, add class of "active".
+		// If not, remove class of "active".
+		for (const store of storeList.children) {
+			const anchor = store.querySelector("a");
+
+			if (store.dataset.storeId != storeId) {
+				anchor.classList.remove("active");
+			} else {
+				anchor.classList.add("active");
+			}
+		}
 	}
 
 	async function deleteStore(storeId) {
