@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	// Create a new list eleemnt for store
 	function createNewStore({ id: storeId, name: storeName }) {
-		console.log(storeId, storeName);
+		// console.log(storeId, storeName);
 		const li = document.createElement("li");
 
 		li.classList.add("nav-item");
@@ -190,8 +190,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 		containerLink.appendChild(textContainerSpan);
 
 		containerLink.addEventListener("click", () => {
-			displayTrips(storeId);
 			selectStore(storeId, storeName);
+			displayTrips(storeId);
 		});
 
 		const storeNameSpan = document.createElement("span");
@@ -219,31 +219,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	// Create a new list element for a trip
-	function createNewTrip({ id, date }) {
-		const li = document.createElement("li");
+	function createNewTrip({ id: tripId, date: tripDate }) {
+		const storeName = storeList.dataset.selectedStoreName;
 
-		li.classList.add(
+		const li = document.createElement("li");
+		li.classList.add("nav-item");
+		li.dataset.tripId = tripId;
+
+		const containerLink = document.createElement("a");
+		containerLink.classList.add(
 			"nav-link",
 			"link-body-emphasis",
 			"d-flex",
 			"justify-content-between",
 			"align-items-center"
 		);
-		li.dataset.tripId = id;
-		li.setAttribute("title", `Select trip to {storename} on ${date}`);
 
-		li.addEventListener("click", (e) => {
-			displayCartItems(id);
+		containerLink.setAttribute(
+			"title",
+			`Select trip to ${storeName} on ${tripDate}`
+		);
 
-			storeList.dataset.selectedStoreId = id;
-
-			// Iterate through each trip list item and see if its id
-			// matches the selected store id. If true, add class of "active".
-			// If not, remove class of "active".
-			for (const trip of tripList.children) {
-				if (trip.dataset.tripId != id) trip.classList.remove("active");
-				else trip.classList.add("active");
-			}
+		containerLink.addEventListener("click", (e) => {
+			selectTrip(tripId, tripDate);
+			displayCartItems(tripId);
 		});
 
 		const textContainerSpan = document.createElement("span");
@@ -254,14 +253,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 		textContainerSpan.appendChild(tripIconSpan);
 
 		const tripDateSpan = document.createElement("span");
-		tripDateSpan.textContent = date;
+		tripDateSpan.textContent = tripDate;
 		textContainerSpan.appendChild(tripDateSpan);
 
-		li.appendChild(textContainerSpan);
+		containerLink.appendChild(textContainerSpan);
 
 		const delBtn = document.createElement("button");
 		delBtn.classList.add("btn", "btn-sm");
-		delBtn.setAttribute("title", `delete ${date} trip`);
+		delBtn.setAttribute("title", `delete ${tripDate} trip`);
 
 		const iconSpan = document.createElement("span");
 		iconSpan.classList.add("bi", "bi-trash3", "text-danger");
@@ -272,8 +271,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 			tripList.remove(li);
 		});
 
-		li.appendChild(delBtn);
+		containerLink.appendChild(delBtn);
 
+		li.appendChild(containerLink);
 		return li;
 	}
 
@@ -369,11 +369,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 		for (const store of storeList.children) {
 			const anchor = store.querySelector("a");
 
-			if (store.dataset.storeId != storeId) {
-				anchor.classList.remove("active");
-			} else {
-				anchor.classList.add("active");
-			}
+			if (store.dataset.storeId != storeId) anchor.classList.remove("active");
+			else anchor.classList.add("active");
+		}
+	}
+
+	function selectTrip(tripId, tripDate) {
+		tripList.dataset.selectedTripId = tripId;
+		tripList.dataset.selectTripDate = tripDate;
+
+		// Iterate through each trip list item and see if its id
+		// matches the selected trip id. If true, add class of "active".
+		// If not, remove class of "active".
+		for (const trip of tripList.children) {
+			const anchor = trip.querySelector("a");
+
+			if (trip.dataset.tripId != tripId) anchor.classList.remove("active");
+			else anchor.classList.add("active");
 		}
 	}
 
