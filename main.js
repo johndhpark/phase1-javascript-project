@@ -9,6 +9,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	displayStores();
 
+	const newStoreModal = document.getElementById("newStoreModal");
+
+	newStoreModal.addEventListener("shown.bs.modal", () => {
+		const storeNameInput = document.getElementById("storeNameInput");
+
+		storeNameInput.focus();
+	});
+
+	newStoreModal.addEventListener("hide.bs.modal", () => {
+		const newStoreForm = document.getElementById("store-form");
+		newStoreForm.reset();
+	});
+
 	// Add the submit event listeners to forms
 	cartForm.addEventListener("submit", submitItem);
 	tripForm.addEventListener("submit", submitTrip);
@@ -260,7 +273,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		const delBtn = document.createElement("button");
 		delBtn.classList.add("btn", "btn-sm");
-		delBtn.setAttribute("title", `delete ${tripDate} trip`);
+		delBtn.setAttribute("title", `delete trip to ${storeName} on ${tripDate}`);
 
 		const iconSpan = document.createElement("span");
 		iconSpan.classList.add("bi", "bi-trash3", "text-danger");

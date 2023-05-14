@@ -18,24 +18,11 @@
 		<div class="row full-height-div min-vh-100">
 			<div class="col d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
 				<h2>Stores</h2>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newStoreModal">
+					Add Store
+				</button>
 				<hr />
-				<ul id="store-list" class="nav nav-pills d-flex flex-column mb-auto">
-					</ulv>
-					<div>
-						<h4>Add New Store</h4>
-						<form id="store-form">
-							<div class="form-floating mb-5">
-								<input type="text" class="form-control" id="storeNameInput" name="name" placeholder="Whole Foods"
-									required />
-								<label for="storeNameInput">Store Name</label>
-							</div>
-							<div class="text-center">
-								<button type="submit" class="btn btn-primary text-center">
-									Submit
-								</button>
-							</div>
-						</form>
-					</div>
+				<ul id="store-list" class="nav nav-pills d-flex flex-column mb-auto"></ul>
 			</div>
 			<div class="col d-flex flex-column flex-shrink-0 p-3 border-end">
 				<h2>Trips</h2>
@@ -54,10 +41,10 @@
 					</form>
 				</div>
 			</div>
-			<div class="col-6 d-flex flex-column flex-shrink-0 p-3 ">
+			<div class="col-6 d-flex flex-column flex-shrink-0 p-3">
 				<h2>Shopping Cart</h2>
-				<hr>
-				<div id="cart-list" class="list-group mb-5"></div>
+				<hr />
+				<div id="cart-list" class="list-group d-flex flex-column mb-auto"></div>
 				<div>
 					<h4>Add New Cart Item</h4>
 					<form id="cart-form">
@@ -94,7 +81,35 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal fade" id="newStoreModal" tabindex="-1" aria-labelledby="new store form modal" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Add New Store</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="store-form">
+							<div class="form-floating mb-5">
+								<input type="text" class="form-control" id="storeNameInput" name="name" placeholder="Whole Foods"
+									required />
+								<label for="storeNameInput">Store Name</label>
+							</div>
+							<div class="modal-footer">
+								<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">
+									Close
+								</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
+							</div>
+						</form>
+					</div>
+
+				</div>
+			</div>
 	</main>
+	<!-- Modal -->
+
+	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
 		crossorigin="anonymous"></script>
