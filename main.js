@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	displayStores();
 
+	// Add event listeners to new store modal
 	const newStoreModal = document.getElementById("newStoreModal");
 
 	newStoreModal.addEventListener("shown.bs.modal", () => {
@@ -20,6 +21,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 	newStoreModal.addEventListener("hide.bs.modal", () => {
 		const newStoreForm = document.getElementById("store-form");
 		newStoreForm.reset();
+	});
+
+	// Add event listeners to new trip modal
+	const newTripModal = document.getElementById("newTripModal");
+
+	newTripModal.addEventListener("shown.bs.modal", () => {
+		const tripDateInput = document.getElementById("tripDateInput");
+
+		tripDateInput.focus();
+	});
+
+	newTripModal.addEventListener("hide.bs.modal", () => {
+		const newTripForm = document.getElementById("trip-form");
+		newTripForm.reset();
 	});
 
 	// Add the submit event listeners to forms
@@ -196,9 +211,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const textContainerSpan = document.createElement("span");
 		textContainerSpan.classList.add("d-flex", "justify-content-left");
 
-		const shopIconSpan = document.createElement("span");
-		shopIconSpan.classList.add("bi-shop", "margin-right-1");
-		textContainerSpan.appendChild(shopIconSpan);
+		// const shopIconSpan = document.createElement("span");
+		// shopIconSpan.classList.add("bi-shop", "margin-right-1");
+		// textContainerSpan.appendChild(shopIconSpan);
 
 		containerLink.appendChild(textContainerSpan);
 
@@ -219,10 +234,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		trashIconSpan.classList.add("bi", "bi-trash3", "text-danger");
 		delBtn.appendChild(trashIconSpan);
 
-		delBtn.addEventListener("click", (e) => {
-			deleteStore(id);
-			storeList.removeChild(li);
-		});
+		delBtn.addEventListener("click", (e) => deleteStore(storeId));
 
 		containerLink.appendChild(delBtn);
 
@@ -261,9 +273,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const textContainerSpan = document.createElement("span");
 		textContainerSpan.classList.add("d-flex", "justify-content-left");
 
-		const tripIconSpan = document.createElement("span");
-		tripIconSpan.classList.add("bi", "bi-calendar", "margin-right-1");
-		textContainerSpan.appendChild(tripIconSpan);
+		// const tripIconSpan = document.createElement("span");
+		// tripIconSpan.classList.add("bi", "bi-calendar", "margin-right-1");
+		// textContainerSpan.appendChild(tripIconSpan);
 
 		const tripDateSpan = document.createElement("span");
 		tripDateSpan.textContent = tripDate;
@@ -279,10 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		iconSpan.classList.add("bi", "bi-trash3", "text-danger");
 		delBtn.appendChild(iconSpan);
 
-		delBtn.addEventListener("click", (e) => {
-			deleteTrip(id);
-			tripList.remove(li);
-		});
+		delBtn.addEventListener("click", (e) => deleteTrip(id));
 
 		containerLink.appendChild(delBtn);
 
@@ -412,6 +421,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 			});
 
 			const data = await res.json();
+			const storeEl = storeList.querySelector(`[data-store-id=
+				'${storeId}']`);
+			storeList.removeChild(storeEl);
 		} catch (error) {
 			console.error(error);
 		}
@@ -419,12 +431,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	async function deleteTrip(tripId) {
 		try {
-			await fetch(`http://localhost:3000/trips/${tripId}`, {
+			const res = await fetch(`http://localhost:3000/trips/${tripId}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
+
+			const data = await res.json();
+			const tripEl = tripList.querySelector(`[data-trip-id='${tripId}']`);
+			tripList.removeChild(tripEl);
 		} catch (error) {
 			console.error(error);
 		}
