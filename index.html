@@ -40,13 +40,24 @@
 				<ul id="store-list" class="nav nav-pills d-flex flex-column mb-auto"></ul>
 			</div>
 			<div class="col d-flex flex-column flex-shrink-0 p-3 border-end">
-				<h2>
-					<svg class="me-2 mb-2" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-						class="bi bi-calendar" viewBox="0 0 16 16">
-						<path
-							d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-					</svg>Trips
-				</h2>
+				<div class="d-flex justify-content-between">
+					<h2 mb-0>
+						<svg class="me-2 mb-2" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+							class="bi bi-calendar" viewBox="0 0 16 16">
+							<path
+								d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+						</svg>Trips
+					</h2>
+					<button type="button" class="btn p-2" data-bs-toggle="modal" data-bs-target="#newTripModal"
+						title="Create New Trip">
+						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle"
+							viewBox="0 0 16 16">
+							<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+							<path
+								d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+						</svg>
+					</button>
+				</div>
 				<hr />
 				<ul id="trip-list" class="nav nav-pills d-flex flex-column mb-auto"></ul>
 				<div>
