@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 	const storeList = document.querySelector("#store-list");
 	const tripList = document.querySelector("#trip-list");
 	const cartList = document.querySelector("#cart-list");
@@ -7,14 +7,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const tripForm = document.querySelector("form#trip-form");
 	const storeForm = document.querySelector("form#store-form");
 
+	const newStoreModal = document.getElementById("newStoreModal");
+	const newTripModal = document.getElementById("newTripModal");
+
 	displayStores();
 
 	// Add event listeners to new store modal
-	const newStoreModal = document.getElementById("newStoreModal");
-
 	newStoreModal.addEventListener("shown.bs.modal", () => {
 		const storeNameInput = document.getElementById("storeNameInput");
-
 		storeNameInput.focus();
 	});
 
@@ -24,8 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	});
 
 	// Add event listeners to new trip modal
-	const newTripModal = document.getElementById("newTripModal");
-
 	newTripModal.addEventListener("shown.bs.modal", () => {
 		const tripDateInput = document.getElementById("tripDateInput");
 
@@ -116,9 +114,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 			delete tripList.dataset.selectedTripId;
 
-			storeList.append(listEl);
-
+			// Clear the new store form
 			e.target.reset();
+
+			// Close the new store modal
+			const newStoreModalBSInstance =
+				bootstrap.Modal.getInstance(newStoreModal);
+			newStoreModalBSInstance.hide();
+
+			// Append the new store to the store list
+			storeList.append(listEl);
 		} catch (error) {
 			console.error(error);
 		}
@@ -145,8 +150,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 			const newTrip = await res.json();
 			const listEl = createNewTrip(newTrip);
-			tripList.append(listEl);
+
 			e.target.reset();
+
+			// Close the new trip modal
+			const newTripBSInstance = bootstrap.Modal.getInstance(newTripModal);
+			newTripBSInstance.hide();
+
+			// Append the new trip to the trip list
+			tripList.append(listEl);
 		} catch (error) {
 			console.error(error);
 		}
