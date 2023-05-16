@@ -58,12 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const showNewTripBtn = document.querySelector("#showNewTripModal");
 
+	// Shows an alert when trying to add a new trip with no store selected
 	showNewTripBtn.addEventListener("click", () => {
 		const { activeStoreId } = storeList.dataset;
 
 		if (!activeStoreId) {
 			appendAlert(
-				"Must select a store first in order to add a new trip",
+				"Must select a store first in order to add a new trip.",
 				"danger"
 			);
 		} else {
@@ -74,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const showNewCartBtn = document.querySelector("#showNewCartModal");
 
+	// Shows an alert when trying to add a new cart item with no trip selected
 	showNewCartBtn.addEventListener("click", () => {
 		const { activeTripId } = tripList.dataset;
 
@@ -449,7 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				deleteCartItem(cartItemId);
 				cartTable.removeChild(tr);
 			} else {
-				updateItemQuantity(cartItemId, quantity);
+				updateCartItemQuantity(cartItemId, quantity);
 
 				quantityContentSpan.textContent = quantity;
 			}
@@ -461,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		incBtn.addEventListener("click", async (e) => {
 			quantity = parseInt(quantity) + 1;
 
-			updateItemQuantity(cartItemId, quantity);
+			updateCartItemQuantity(cartItemId, quantity);
 
 			quantityContentSpan.textContent = quantity;
 		});
@@ -600,7 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
-	async function updateItemQuantity(itemId, quantity) {
+	async function updateCartItemQuantity(itemId, quantity) {
 		try {
 			await fetch(`http://localhost:3000/items/${itemId}`, {
 				method: "PATCH",
