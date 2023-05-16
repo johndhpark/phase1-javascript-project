@@ -62,32 +62,29 @@ document.addEventListener("DOMContentLoaded", () => {
 	async function displayStores() {
 		// Then, make a fetch request to http://localhost:3000/stores.
 		const res = await fetch("http://localhost:3000/stores");
-		const data = await res.json();
+		const stores = await res.json();
 
 		// Iterate through each store and create an list item element to display
-		const stores = data.map((store) => createNewStore(store));
+		const storeItems = stores.map((store) => createNewStore(store));
 
 		// Append the stores to ul
 		// cartTable.replaceChildren();
-		storeList.replaceChildren(...stores);
+		storeList.replaceChildren(...storeItems);
 	}
 
 	async function displayTrips(storeId) {
 		const res = await fetch("http://localhost:3000/trips");
-		const data = await res.json();
+		const trips = await res.json();
 
 		// Iterate through each store trip and create a list element
-		const trips = data
+		const tripItems = trips
 			.filter((trip) => parseInt(trip.storeId) === storeId)
 			.map((trip) => createNewTrip(trip));
 
-		// Update the trip list
-		delete tripList.dataset.selectedTripId;
-		tripList.replaceChildren(...trips);
-		cartTable.replaceChildren();
+		tripList.replaceChildren(...tripItems);
 	}
 
-	async function displayCartItems(tripId) {
+	async function displayCart(tripId) {
 		const res = await fetch("http://localhost:3000/items");
 		const items = await res.json();
 
@@ -98,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// Update the cart list
 		cartTable.replaceChildren(...cartItems);
-		tripList.dataset.selectedTripId = tripId;
 	}
 
 	async function submitStore(e) {
@@ -123,12 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			const listEl = createNewStore(newStore);
 
-			storeList.dataset.selectedStoreId = newStore.id;
+			storeList.dataset.activeStoreId = newStore.id;
 
 			tripList.replaceChildren();
 			cartTable.replaceChildren();
 
-			delete tripList.dataset.selectedTripId;
+			delete tripList.dataset.activeTripId;
 
 			// Clear the new store form
 			e.target.reset();
@@ -151,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		e.preventDefault();
 
 		const date = e.target.elements.date.value;
-		const storeId = parseInt(storeList.dataset.selectedStoreId);
+		const storeId = parseInt(storeList.dataset.activeStoreId);
 
 		try {
 			const res = await fetch("http://localhost:3000/trips", {
@@ -193,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const memo = e.target.elements.memo.value;
 		const quantity = parseInt(e.target.elements.quantity.value);
 		const unitPrice = parseFloat(e.target.elements.unitPrice.value).toFixed(2);
-		const tripId = parseInt(tripList.dataset.selectedTripId);
+		const tripId = parseInt(tripList.dataset.activeTripId);
 		const purchased = false;
 
 		try {
@@ -281,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// Create a new list element for a trip
 	function createNewTrip({ id: tripId, date: tripDate }) {
-		const storeName = storeList.dataset.selectedStoreName;
+		const storeName = storeList.dataset.activeStoreName;
 
 		const li = document.createElement("li");
 		li.classList.add("nav-item");
@@ -303,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		containerLink.addEventListener("click", (e) => {
 			selectTrip(tripId, tripDate);
-			displayCartItems(tripId);
+			displayCart(tripId);
 		});
 
 		const textContainerSpan = document.createElement("span");
@@ -424,33 +420,57 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function selectStore(storeId, storeName) {
-		storeList.dataset.selectedStoreId = storeId;
-		storeList.dataset.selectedStoreName = storeName;
+		clearTrips();
+		clearCart();
+
+		storeList.dataset.activeStoreId = storeId;
+		storeList.dataset.activeStoreName = storeName;
 
 		// Iterate through each store list item and see if its id
-		// matches the selected store id. If true, add class of "active".
+		// matches the active store id. If true, add class of "active".
 		// If not, remove class of "active".
 		for (const store of storeList.children) {
 			const anchor = store.querySelector("a");
 
-			if (store.dataset.storeId != storeId) anchor.classList.remove("active");
-			else anchor.classList.add("active");
+			if (store.dataset.storeId != storeId) {
+				anchor.classList.remove("active");
+			} else {
+				anchor.classList.add("active");
+				displayTrips(storeId);
+			}
 		}
 	}
 
 	function selectTrip(tripId, tripDate) {
-		tripList.dataset.selectedTripId = tripId;
-		tripList.dataset.selectTripDate = tripDate;
+		clearCart();
+
+		tripList.dataset.activeTripId = tripId;
+		tripList.dataset.activeTripDate = tripDate;
 
 		// Iterate through each trip list item and see if its id
-		// matches the selected trip id. If true, add class of "active".
+		// matches the active trip id. If true, add class of "active".
 		// If not, remove class of "active".
 		for (const trip of tripList.children) {
 			const anchor = trip.querySelector("a");
 
-			if (trip.dataset.tripId != tripId) anchor.classList.remove("active");
-			else anchor.classList.add("active");
+			if (trip.dataset.tripId != tripId) {
+				anchor.classList.remove("active");
+			} else {
+				anchor.classList.add("active");
+				displayCart(tripId);
+			}
 		}
+	}
+
+	function clearTrips() {
+		delete tripList.dataset.activeTripId;
+		delete tripList.dataset.tripDate;
+
+		tripList.replaceChildren();
+	}
+
+	function clearCart() {
+		cartTable.replaceChildren();
 	}
 
 	async function deleteStore(storeId) {
