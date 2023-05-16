@@ -23,7 +23,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="store-form">
+					<form id="storeForm">
 						<div class="form-floating mb-5">
 							<input type="text" class="form-control" id="storeNameInput" name="name" placeholder="Whole Foods"
 								required />
@@ -49,7 +49,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form id="trip-form">
+					<form id="tripForm">
 						<div class="form-floating mb-5">
 							<input type="date" class="form-control" id="tripDateInput" name="date" placeholder="2023-05-12"
 								required />
@@ -57,7 +57,7 @@
 						</div>
 						<div class="form-floating mb-5">
 							<input type="text" class="form-control" id="tripTitleInput" name="title" />
-							<label for="storeNameInput">Title</label>
+							<label for="storeNameInput">Title (Optional)</label>
 						</div>
 						<div class="modal-footer">
 							<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -81,7 +81,7 @@
 				</div>
 				<div class="modal-body">
 					<div>
-						<form id="cart-form">
+						<form id="cartForm">
 							<div class="form-floating mb-3">
 								<input type="text" class="form-control" id="descriptionInput" name="description"
 									placeholder="description" required />
@@ -89,7 +89,7 @@
 							</div>
 							<div class="form-floating mb-3">
 								<input type="text" class="form-control" id="memoInput" name="memo" placeholder="Memo" />
-								<label for="memoInput">Memo</label>
+								<label for="memoInput">Memo (Optional)</label>
 							</div>
 							<div class="mb-3">
 								<select class="form-select" name="quantity">
@@ -192,14 +192,14 @@
 				<hr />
 				<!-- <div id="cart-list" class="list-group d-flex flex-column mb-auto"></div> -->
 				<div class="table-responsive">
-					<table id="cart-table" class="table align-middle">
+					<table id="cart-table" class="table align-middle table-hover text-nowrap">
 						<thead>
 							<tr>
-								<th scope="col">Description</th>
-								<th scope="col">Memo</th>
-								<th scope="col">Quantity</th>
-								<th scope="col">Unit Price</th>
-								<th scope="col"></th>
+								<th scope="col" class="col-3">Description</th>
+								<th scope="col" class="col-3">Memo</th>
+								<th scope="col" class="col-2">Quantity</th>
+								<th scope="col" class="col-2">Unit Price</th>
+								<th scope="col" class="col-1"></th>
 							</tr>
 						</thead>
 						<tbody>
