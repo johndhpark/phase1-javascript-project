@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	const tripList = document.querySelector("#trip-list");
 	const cartTable = document.querySelector("#cart-table tbody");
 
-	const storeForm = document.querySelector("form#store-form");
-	const tripForm = document.querySelector("form#trip-form");
-	const cartForm = document.querySelector("form#cart-form");
+	const storeForm = document.querySelector("form#storeForm");
+	const tripForm = document.querySelector("form#tripForm");
+	const cartForm = document.querySelector("form#cartForm");
 
 	const newStoreModal = document.getElementById("newStoreModal");
 	const newTripModal = document.getElementById("newTripModal");
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	newStoreModal.addEventListener("hide.bs.modal", () => {
-		const newStoreForm = document.getElementById("store-form");
+		const newStoreForm = document.getElementById("storeForm");
 		newStoreForm.reset();
 	});
 
@@ -32,14 +32,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	newTripModal.addEventListener("hide.bs.modal", () => {
-		const newTripForm = document.getElementById("trip-form");
+		const newTripForm = document.getElementById("tripForm");
 		newTripForm.reset();
 	});
 
+	// Add event listeners to new trip modal
+	newCartItemModal.addEventListener("shown.bs.modal", () => {
+		const descriptionInput = document.getElementById("descriptionInput");
+
+		descriptionInput.focus();
+	});
+
+	newCartItemModal.addEventListener("hide.bs.modal", () => {
+		const newCartItemForm = document.getElementById("cartForm");
+		newCartItemForm.reset();
+	});
+
 	// Add the submit event listeners to forms
-	cartForm.addEventListener("submit", submitItem);
-	tripForm.addEventListener("submit", submitTrip);
+
 	storeForm.addEventListener("submit", submitStore);
+	tripForm.addEventListener("submit", submitTrip);
+	cartForm.addEventListener("submit", submitItem);
 
 	/* ===========================================================
 		
@@ -106,6 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 
 			const newStore = await res.json();
+			const { id } = newStore;
+
 			const listEl = createNewStore(newStore);
 
 			storeList.dataset.selectedStoreId = newStore.id;
@@ -125,6 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Append the new store to the store list
 			storeList.append(listEl);
+
+			selectStore(id, name);
 		} catch (error) {
 			console.error(error);
 		}
@@ -150,6 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 
 			const newTrip = await res.json();
+			const { id } = newTrip;
+
 			const listEl = createNewTrip(newTrip);
 
 			e.target.reset();
@@ -160,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Append the new trip to the trip list
 			tripList.append(listEl);
+			selectTrip(id, date);
 		} catch (error) {
 			console.error(error);
 		}
@@ -212,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// Create a new list eleemnt for store
 	function createNewStore({ id: storeId, name: storeName }) {
-		// console.log(storeId, storeName);
 		const li = document.createElement("li");
 
 		li.classList.add("nav-item");
@@ -304,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		iconSpan.classList.add("bi", "bi-trash3", "text-danger");
 		delBtn.appendChild(iconSpan);
 
-		delBtn.addEventListener("click", (e) => deleteTrip(id));
+		delBtn.addEventListener("click", (e) => deleteTrip(tripId));
 
 		containerLink.appendChild(delBtn);
 
@@ -313,30 +332,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	// Creates a new list element for cart item
-	function createNewCartItem({ id, description, memo, quantity, unitPrice }) {
+	function createNewCartItem({
+		id: cartItemId,
+		description,
+		memo,
+		quantity,
+		unitPrice,
+	}) {
 		const tr = document.createElement("tr");
 
-		// const descSpan = document.createElement("span");
 		const descTD = document.createElement("td");
-		// descTD.classList.add("align-middle");
 
-		// descSpan.textContent = description;
 		descTD.textContent = description;
 
-		// li.appendChild(descSpan);
 		tr.appendChild(descTD);
 
-		// const memoSpan = document.createElement("span");
 		const memoTD = document.createElement("td");
-		// memoTD.classList.add("align-middle");
 
-		// memoSpan.textContent = memo;
 		memoTD.textContent = memo;
 
-		// li.appendChild(memoSpan);
 		tr.appendChild(memoTD);
 
-		// const quantityContainerSpan = document.createElement("span");
 		const quantityTD = document.createElement("td");
 		const quantityContentSpan = document.createElement("span");
 		quantityContentSpan.classList.add(
@@ -355,10 +371,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// If the quantity is zero, we just delete the cart item
 			if (quantity === 0) {
-				deleteCartItem(id);
-				cartTable.removeChild(li);
+				deleteCartItem(cartItemId);
+				cartTable.removeChild(tr);
 			} else {
-				updateItemQuantity(id, quantity);
+				updateItemQuantity(cartItemId, quantity);
 
 				quantityContentSpan.textContent = quantity;
 			}
@@ -370,26 +386,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		incBtn.addEventListener("click", async (e) => {
 			quantity = parseInt(quantity) + 1;
 
-			updateItemQuantity(id, quantity);
+			updateItemQuantity(cartItemId, quantity);
 
 			quantityContentSpan.textContent = quantity;
 		});
 
-		// quantityContainerSpan.appendChild(decBtn);
 		quantityTD.appendChild(decBtn);
-		// quantityContainerSpan.appendChild(quantityContentSpan);
 		quantityTD.appendChild(quantityContentSpan);
-		// quantityContainerSpan.appendChild(incBtn);
 		quantityTD.appendChild(incBtn);
 
-		// li.appendChild(quantityContainerSpan);
 		tr.appendChild(quantityTD);
 
-		// const priceSpan = document.createElement("span");
-		// priceSpan.textContent = `$${price}`;
-		// li.appendChild(priceSpan);
 		const priceTD = document.createElement("td");
-		// priceTD.classList.add("align-middle");
 		priceTD.textContent = `$${unitPrice}`;
 		tr.appendChild(priceTD);
 
@@ -404,16 +412,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		delBtn.appendChild(iconSpan);
 
 		delBtn.addEventListener("click", (e) => {
-			deleteCartItem(id);
+			deleteCartItem(cartItemId);
 			cartTable.removeChild(tr);
 		});
 
 		delTD.appendChild(delBtn);
 
-		// li.appendChild(delBtn);
 		tr.appendChild(delTD);
 
-		// return li;
 		return tr;
 	}
 
