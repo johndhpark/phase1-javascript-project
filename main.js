@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const newStoreModal = document.getElementById("newStoreModal");
 	const newTripModal = document.getElementById("newTripModal");
+	const newCartItemModal = document.getElementById("newCartItemModal");
 
 	displayStores();
 
@@ -194,8 +195,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			const item = await res.json();
 			const listEl = createNewCartItem(item);
-			cartList.append(listEl);
+
 			e.target.reset();
+
+			// Close the new cart item modal
+			const newCartItemBSInstance =
+				bootstrap.Modal.getInstance(newCartItemModal);
+			newCartItemBSInstance.hide();
+
+			// Append the new cart to the cart list
+			cartList.append(listEl);
 		} catch (error) {
 			console.error(error);
 		}
