@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+	const newStoreModal = document.getElementById("newStoreModal");
+	const newTripModal = document.getElementById("newTripModal");
+	const newCartModal = document.getElementById("newCartModal");
+
+	const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
+
 	const storeList = document.querySelector("#store-list");
 	const tripList = document.querySelector("#trip-list");
 	const cartTable = document.querySelector("#cart-table tbody");
@@ -7,11 +13,37 @@ document.addEventListener("DOMContentLoaded", () => {
 	const tripForm = document.querySelector("form#tripForm");
 	const cartForm = document.querySelector("form#cartForm");
 
-	const newStoreModal = document.getElementById("newStoreModal");
-	const newTripModal = document.getElementById("newTripModal");
-	const newCartItemModal = document.getElementById("newCartItemModal");
+	const appendAlert = (message, type) => {
+		const wrapper = document.createElement("div");
+		wrapper.classList.add(
+			"alert",
+			`alert-${type}`,
+			"d-flex",
+			"align-items-center",
+			"alert-dismissible",
+			"mt-2"
+		);
+		wrapper.setAttribute("role", "alert");
 
-	displayStores();
+		const iconSpan = document.createElement("span");
+		iconSpan.classList.add("bi", "bi-exclamation-triangle-fill", "me-2");
+		wrapper.appendChild(iconSpan);
+
+		const messageDiv = document.createElement("div");
+		messageDiv.textContent = message;
+
+		wrapper.appendChild(messageDiv);
+
+		const closeBtn = document.createElement("button");
+		closeBtn.classList.add("btn-close");
+		closeBtn.setAttribute("type", "button");
+		closeBtn.setAttribute("aria-label", "Close");
+		closeBtn.dataset.bsDismiss = "alert";
+
+		wrapper.appendChild(closeBtn);
+
+		alertPlaceholder.append(wrapper);
+	};
 
 	// Add event listeners to new store modal
 	newStoreModal.addEventListener("shown.bs.modal", () => {
@@ -22,6 +54,40 @@ document.addEventListener("DOMContentLoaded", () => {
 	newStoreModal.addEventListener("hide.bs.modal", () => {
 		const newStoreForm = document.getElementById("storeForm");
 		newStoreForm.reset();
+	});
+
+	const showNewTripBtn = document.querySelector("#showNewTripModal");
+
+	showNewTripBtn.addEventListener("click", () => {
+		const { activeStoreId } = storeList.dataset;
+
+		if (!activeStoreId) {
+			appendAlert(
+				"Must select a store first in order to add a new trip",
+				"danger"
+			);
+		} else {
+			const newTripInstance = bootstrap.Modal.getOrCreateInstance(newTripModal);
+			newTripInstance.show();
+		}
+	});
+
+	const showNewCartBtn = document.querySelector("#showNewCartModal");
+
+	showNewCartBtn.addEventListener("click", () => {
+		const { activeTripId } = tripList.dataset;
+
+		if (!activeTripId) {
+			appendAlert(
+				"Must select a trip first in order to add a new cart item.",
+				"danger"
+			);
+		} else {
+			const newCartFormInstance =
+				bootstrap.Modal.getOrCreateInstance(newCartModal);
+
+			newCartFormInstance.show();
+		}
 	});
 
 	// Add event listeners to new trip modal
@@ -37,13 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// Add event listeners to new trip modal
-	newCartItemModal.addEventListener("shown.bs.modal", () => {
+	newCartModal.addEventListener("shown.bs.modal", () => {
 		const descriptionInput = document.getElementById("descriptionInput");
 
 		descriptionInput.focus();
 	});
 
-	newCartItemModal.addEventListener("hide.bs.modal", () => {
+	newCartModal.addEventListener("hide.bs.modal", () => {
 		const newCartItemForm = document.getElementById("cartForm");
 		newCartItemForm.reset();
 	});
@@ -53,6 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	storeForm.addEventListener("submit", submitStore);
 	tripForm.addEventListener("submit", submitTrip);
 	cartForm.addEventListener("submit", submitItem);
+
+	displayStores();
 
 	/* ===========================================================
 		
@@ -143,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Close the new store modal
 			const newStoreModalBSInstance =
-				bootstrap.Modal.getInstance(newStoreModal);
+				bootstrap.Modal.getOrCreateInstance(newStoreModal);
 			newStoreModalBSInstance.hide();
 
 			// Append the new store to the store list
@@ -182,8 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			e.target.reset();
 
 			// Close the new trip modal
-			const newTripBSInstance = bootstrap.Modal.getInstance(newTripModal);
-			newTripBSInstance.hide();
+			const newTripInstance = bootstrap.Modal.getInstance(newTripModal);
+			newTripInstance.hide();
 
 			// Append the new trip to the trip list
 			tripList.append(listEl);
@@ -227,8 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			e.target.reset();
 
 			// Close the new cart item modal
-			const newCartItemBSInstance =
-				bootstrap.Modal.getInstance(newCartItemModal);
+			const newCartItemBSInstance = bootstrap.Modal.getInstance(newCartModal);
 			newCartItemBSInstance.hide();
 
 			// Append the new cart to the cart list

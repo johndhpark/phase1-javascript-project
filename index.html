@@ -71,8 +71,7 @@
 		</div>
 	</div>
 	<!-- New Cart Item Modal -->
-	<div class="modal fade" id="newCartItemModal" tabindex="-1" aria-labelledby="new cart item form modal"
-		aria-hidden="true">
+	<div class="modal fade" id="newCartModal" tabindex="-1" aria-labelledby="new cart item form modal" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -122,6 +121,7 @@
 		</div>
 	</div>
 	<main class="container ms-0 mw-100">
+		<div id="liveAlertPlaceholder"></div>
 		<div class="row full-height-div min-vh-100">
 			<div class="col-2 d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
 				<div class="d-flex justify-content-between">
@@ -155,8 +155,7 @@
 								d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
 						</svg>Trips
 					</h2>
-					<button type="button" class="btn p-2" data-bs-toggle="modal" data-bs-target="#newTripModal"
-						title="Create New Trip">
+					<button type="button" id="showNewTripModal" class="btn p-2" title="Create New Trip">
 						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle"
 							viewBox="0 0 16 16">
 							<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -178,8 +177,7 @@
 						</svg>
 						Shopping Cart
 					</h2>
-					<button type="button" class="btn p-2" data-bs-toggle="modal" data-bs-target="#newCartItemModal"
-						title="Create New Cart Item">
+					<button type="button" id="showNewCartModal" class="btn p-2" title="Create New Cart Item">
 						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle"
 							viewBox="0 0 16 16">
 							<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
