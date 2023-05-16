@@ -60,41 +60,53 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 	=========================================================== */
 	async function displayStores() {
-		// Then, make a fetch request to http://localhost:3000/stores.
-		const res = await fetch("http://localhost:3000/stores");
-		const stores = await res.json();
+		try {
+			// Then, make a fetch request to http://localhost:3000/stores.
+			const res = await fetch("http://localhost:3000/stores");
+			const stores = await res.json();
 
-		// Iterate through each store and create an list item element to display
-		const storeItems = stores.map((store) => createNewStore(store));
+			// Iterate through each store and create an list item element to display
+			const storeItems = stores.map((store) => createNewStore(store));
 
-		// Append the stores to ul
-		// cartTable.replaceChildren();
-		storeList.replaceChildren(...storeItems);
+			// Append the stores to ul
+			// cartTable.replaceChildren();
+			storeList.replaceChildren(...storeItems);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async function displayTrips(storeId) {
-		const res = await fetch("http://localhost:3000/trips");
-		const trips = await res.json();
+		try {
+			const res = await fetch("http://localhost:3000/trips");
+			const trips = await res.json();
 
-		// Iterate through each store trip and create a list element
-		const tripItems = trips
-			.filter((trip) => parseInt(trip.storeId) === storeId)
-			.map((trip) => createNewTrip(trip));
+			// Iterate through each store trip and create a list element
+			const tripItems = trips
+				.filter((trip) => parseInt(trip.storeId) === storeId)
+				.map((trip) => createNewTrip(trip));
 
-		tripList.replaceChildren(...tripItems);
+			tripList.replaceChildren(...tripItems);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async function displayCart(tripId) {
-		const res = await fetch("http://localhost:3000/items");
-		const items = await res.json();
+		try {
+			const res = await fetch("http://localhost:3000/items");
+			const items = await res.json();
 
-		// Iterate throgh each cart item and create a list element
-		const cartItems = items
-			.filter((item) => parseInt(item.tripId) === tripId)
-			.map((item) => createNewCartItem(item));
+			// Iterate throgh each cart item and create a list element
+			const cartItems = items
+				.filter((item) => parseInt(item.tripId) === tripId)
+				.map((item) => createNewCartItem(item));
 
-		// Update the cart list
-		cartTable.replaceChildren(...cartItems);
+			// Update the cart list
+			cartTable.replaceChildren(...cartItems);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 
 	async function submitStore(e) {
