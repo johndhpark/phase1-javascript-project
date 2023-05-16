@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	const tripList = document.querySelector("#trip-list");
 	const cartList = document.querySelector("#cart-list");
 
-	const cartForm = document.querySelector("form#cart-form");
-	const tripForm = document.querySelector("form#trip-form");
 	const storeForm = document.querySelector("form#store-form");
+	const tripForm = document.querySelector("form#trip-form");
+	const cartForm = document.querySelector("form#cart-form");
 
 	const newStoreModal = document.getElementById("newStoreModal");
 	const newTripModal = document.getElementById("newTripModal");
