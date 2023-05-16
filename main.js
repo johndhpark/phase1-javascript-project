@@ -232,10 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		const textContainerSpan = document.createElement("span");
 		textContainerSpan.classList.add("d-flex", "justify-content-left");
 
-		// const shopIconSpan = document.createElement("span");
-		// shopIconSpan.classList.add("bi-shop", "margin-right-1");
-		// textContainerSpan.appendChild(shopIconSpan);
-
 		containerLink.appendChild(textContainerSpan);
 
 		containerLink.addEventListener("click", () => {
@@ -294,10 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		const textContainerSpan = document.createElement("span");
 		textContainerSpan.classList.add("d-flex", "justify-content-left");
 
-		// const tripIconSpan = document.createElement("span");
-		// tripIconSpan.classList.add("bi", "bi-calendar", "margin-right-1");
-		// textContainerSpan.appendChild(tripIconSpan);
-
 		const tripDateSpan = document.createElement("span");
 		tripDateSpan.textContent = tripDate;
 		textContainerSpan.appendChild(tripDateSpan);
@@ -322,14 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// Creates a new list element for cart item
 	function createNewCartItem({ id, description, memo, quantity, unitPrice }) {
-		// const li = document.createElement("li");
-		// li.classList.add(
-		// 	"list-group-item",
-		// 	"d-flex",
-		// 	"justify-content-between",
-		// 	"align-items-center"
-		// );
-		// li.dataset.itemId = id;
 		const tr = document.createElement("tr");
 
 		// const descSpan = document.createElement("span");
