@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const storeList = document.querySelector("#store-list");
 	const tripList = document.querySelector("#trip-list");
-	const cartList = document.querySelector("#cart-list");
+	const cartTable = document.querySelector("#cart-table tbody");
 
 	const storeForm = document.querySelector("form#store-form");
 	const tripForm = document.querySelector("form#trip-form");
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const stores = data.map((store) => createNewStore(store));
 
 		// Append the stores to ul
-		cartList.replaceChildren();
+		// cartTable.replaceChildren();
 		storeList.replaceChildren(...stores);
 	}
 
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Update the trip list
 		delete tripList.dataset.selectedTripId;
 		tripList.replaceChildren(...trips);
-		cartList.replaceChildren();
+		cartTable.replaceChildren();
 	}
 
 	async function displayCartItems(tripId) {
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			.map((item) => createNewCartItem(item));
 
 		// Update the cart list
-		cartList.replaceChildren(...cartItems);
+		cartTable.replaceChildren(...cartItems);
 		tripList.dataset.selectedTripId = tripId;
 	}
 
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			storeList.dataset.selectedStoreId = newStore.id;
 
 			tripList.replaceChildren();
-			cartList.replaceChildren();
+			cartTable.replaceChildren();
 
 			delete tripList.dataset.selectedTripId;
 
@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const description = e.target.elements.description.value;
 		const memo = e.target.elements.memo.value;
 		const quantity = parseInt(e.target.elements.quantity.value);
-		const price = parseFloat(e.target.elements.price.value).toFixed(2);
+		const unitPrice = parseFloat(e.target.elements.unitPrice.value).toFixed(2);
 		const tripId = parseInt(tripList.dataset.selectedTripId);
 		const purchased = false;
 
@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					tripId,
 					memo,
 					quantity,
-					price,
+					unitPrice,
 					purchased,
 				}),
 			});
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			newCartItemBSInstance.hide();
 
 			// Append the new cart to the cart list
-			cartList.append(listEl);
+			cartTable.append(listEl);
 		} catch (error) {
 			console.error(error);
 		}
@@ -321,33 +321,49 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	// Creates a new list element for cart item
-	function createNewCartItem({ id, description, memo, quantity, price }) {
-		const li = document.createElement("li");
-		li.classList.add(
-			"list-group-item",
-			"d-flex",
-			"justify-content-between",
-			"align-items-center"
-		);
-		li.dataset.itemId = id;
+	function createNewCartItem({ id, description, memo, quantity, unitPrice }) {
+		// const li = document.createElement("li");
+		// li.classList.add(
+		// 	"list-group-item",
+		// 	"d-flex",
+		// 	"justify-content-between",
+		// 	"align-items-center"
+		// );
+		// li.dataset.itemId = id;
+		const tr = document.createElement("tr");
 
-		const descSpan = document.createElement("span");
+		// const descSpan = document.createElement("span");
+		const descTD = document.createElement("td");
+		// descTD.classList.add("align-middle");
 
-		descSpan.textContent = description;
+		// descSpan.textContent = description;
+		descTD.textContent = description;
 
-		li.appendChild(descSpan);
+		// li.appendChild(descSpan);
+		tr.appendChild(descTD);
 
-		const memoSpan = document.createElement("span");
-		memoSpan.textContent = memo;
-		li.appendChild(memoSpan);
+		// const memoSpan = document.createElement("span");
+		const memoTD = document.createElement("td");
+		// memoTD.classList.add("align-middle");
 
-		const quantityContainerSpan = document.createElement("span");
+		// memoSpan.textContent = memo;
+		memoTD.textContent = memo;
+
+		// li.appendChild(memoSpan);
+		tr.appendChild(memoTD);
+
+		// const quantityContainerSpan = document.createElement("span");
+		const quantityTD = document.createElement("td");
 		const quantityContentSpan = document.createElement("span");
-		quantityContentSpan.classList.add("align-middle");
+		quantityContentSpan.classList.add(
+			"text-center",
+			"align-middle",
+			"cart-item-quantity"
+		);
 		quantityContentSpan.textContent = quantity;
 
 		const decBtn = document.createElement("button");
-		decBtn.classList.add("btn", "align-middle");
+		decBtn.classList.add("btn");
 		decBtn.textContent = "-";
 
 		decBtn.addEventListener("click", async (e) => {
@@ -356,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			// If the quantity is zero, we just delete the cart item
 			if (quantity === 0) {
 				deleteCartItem(id);
-				cartList.removeChild(li);
+				cartTable.removeChild(li);
 			} else {
 				updateItemQuantity(id, quantity);
 
@@ -365,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 
 		const incBtn = document.createElement("button");
-		incBtn.classList.add("btn");
+		incBtn.classList.add("btn", "align-middle");
 		incBtn.textContent = "+";
 		incBtn.addEventListener("click", async (e) => {
 			quantity = parseInt(quantity) + 1;
@@ -375,11 +391,26 @@ document.addEventListener("DOMContentLoaded", () => {
 			quantityContentSpan.textContent = quantity;
 		});
 
-		quantityContainerSpan.appendChild(decBtn);
-		quantityContainerSpan.appendChild(quantityContentSpan);
-		quantityContainerSpan.appendChild(incBtn);
+		// quantityContainerSpan.appendChild(decBtn);
+		quantityTD.appendChild(decBtn);
+		// quantityContainerSpan.appendChild(quantityContentSpan);
+		quantityTD.appendChild(quantityContentSpan);
+		// quantityContainerSpan.appendChild(incBtn);
+		quantityTD.appendChild(incBtn);
 
-		li.appendChild(quantityContainerSpan);
+		// li.appendChild(quantityContainerSpan);
+		tr.appendChild(quantityTD);
+
+		// const priceSpan = document.createElement("span");
+		// priceSpan.textContent = `$${price}`;
+		// li.appendChild(priceSpan);
+		const priceTD = document.createElement("td");
+		// priceTD.classList.add("align-middle");
+		priceTD.textContent = `$${unitPrice}`;
+		tr.appendChild(priceTD);
+
+		const delTD = document.createElement("td");
+		delTD.classList.add("text-center");
 
 		const delBtn = document.createElement("button");
 		delBtn.classList.add("btn", "btn-small");
@@ -390,16 +421,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		delBtn.addEventListener("click", (e) => {
 			deleteCartItem(id);
-			cartList.removeChild(li);
+			cartTable.removeChild(tr);
 		});
 
-		const priceSpan = document.createElement("span");
-		priceSpan.textContent = `$${price}`;
-		li.appendChild(priceSpan);
+		delTD.appendChild(delBtn);
 
-		li.appendChild(delBtn);
+		// li.appendChild(delBtn);
+		tr.appendChild(delTD);
 
-		return li;
+		// return li;
+		return tr;
 	}
 
 	function selectStore(storeId, storeName) {
