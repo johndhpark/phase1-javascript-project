@@ -40,24 +40,6 @@
       "unitPrice": "5.00",
       "purchased": false,
       "id": 3
-    },
-    {
-      "description": "Something very long",
-      "tripId": 2,
-      "memo": "",
-      "quantity": 1,
-      "unitPrice": "15.00",
-      "purchased": false,
-      "id": 4
-    },
-    {
-      "description": "Something very very very very very very long",
-      "tripId": 2,
-      "memo": "",
-      "quantity": 1,
-      "unitPrice": "29.00",
-      "purchased": false,
-      "id": 5
     }
   ]
 }
