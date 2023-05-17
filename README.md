@@ -10,7 +10,6 @@ Recently I have been trying to be more health conscious. However, due to the ris
 
 ## Getting Started
 
----
 
 1. Fork the project.
 2. Clone the project to local directory.
