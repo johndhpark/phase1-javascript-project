@@ -1,0 +1,12 @@
+li {
+	cursor: pointer;
+}
+
+a {
+	text-decoration: none;
+}
+
+.cart-item-quantity {
+	display: inline-block;
+	width: 45px;
+}
