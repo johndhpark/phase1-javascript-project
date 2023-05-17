@@ -4,7 +4,6 @@ A SPA (Single Page Application) using HTML, CSS, and JS to communicate with a pu
 
 ## Background
 
----
 
 Recently I have been trying to be more health conscious. However, due to the rising inflation, this has been very difficult to do. Each week, I go to several markets to get the best deals on organic products. Unfortunately, this task has become more and more arduous due to my busy schedule and the sheer number of items that I need to keep track of. For a while, I been searching for an app that would make this process much easier. I thought it would be a great idea to take this opportunity to create my own app that will take care of this problem.
 
