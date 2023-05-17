@@ -16,6 +16,7 @@ Recently I have been trying to be more health conscious. However, due to the ris
 3. Go to the project directory from the terminal.
 4. Run the command `npm install` to install dependencies.
 5. Lastly, run `npm start` to start the application.
+<br><br>
 
 ## How It Works
 
