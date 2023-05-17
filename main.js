@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const storeList = document.querySelector("#store-list");
 	const tripList = document.querySelector("#trip-list");
-	const cartTable = document.querySelector("#cart-table tbody");
+	const cartTable = document.querySelector("#cart-table");
+	const cartBody = cartTable.querySelector("tbody");
 
 	const storeForm = document.querySelector("form#storeForm");
 	const tripForm = document.querySelector("form#tripForm");
@@ -139,8 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			const storeItems = stores.map((store) => createNewStore(store));
 
 			// Append the stores to ul
-			// cartTable.replaceChildren();
 			storeList.replaceChildren(...storeItems);
+			storeList.dataset.storeCount = storeItems.length;
 		} catch (error) {
 			console.error(error);
 		}
@@ -157,6 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				.map((trip) => createNewTrip(trip));
 
 			tripList.replaceChildren(...tripItems);
+			tripList.dataset.tripCount = tripItems.length;
 		} catch (error) {
 			console.error(error);
 		}
@@ -173,7 +175,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				.map((item) => createNewCartItem(item));
 
 			// Update the cart list
-			cartTable.replaceChildren(...cartItems);
+			cartBody.replaceChildren(...cartItems);
+			cartTable.dataset.cartCount = cartItems.length;
 		} catch (error) {
 			console.error(error);
 		}
@@ -204,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			storeList.dataset.activeStoreId = newStore.id;
 
 			tripList.replaceChildren();
-			cartTable.replaceChildren();
+			cartBody.replaceChildren();
 
 			delete tripList.dataset.activeTripId;
 
@@ -218,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Append the new store to the store list
 			storeList.append(listEl);
-
+			storeList.dataset.storeCount = parseInt(storeList.dataset.storeCount) + 1;
 			selectStore(id, name);
 		} catch (error) {
 			console.error(error);
@@ -257,6 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// Append the new trip to the trip list
 			tripList.append(listEl);
+			tripList.dataset.tripCount = parseInt(tripList.dataset.tripCount) + 1;
 			selectTrip(id, date);
 		} catch (error) {
 			console.error(error);
@@ -301,7 +305,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			newCartItemBSInstance.hide();
 
 			// Append the new cart to the cart list
-			cartTable.append(listEl);
+			cartBody.append(listEl);
+			cartTable.dataset.cartCount = parseInt(cartTable.dataset.cartCount) + 1;
 		} catch (error) {
 			console.error(error);
 		}
@@ -449,7 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			// If the quantity is zero, we just delete the cart item
 			if (quantity === 0) {
 				deleteCartItem(cartItemId);
-				cartTable.removeChild(tr);
+				cartBody.removeChild(tr);
 			} else {
 				updateCartItemQuantity(cartItemId, quantity);
 
@@ -490,7 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		delBtn.addEventListener("click", (e) => {
 			deleteCartItem(cartItemId);
-			cartTable.removeChild(tr);
+			cartBody.removeChild(tr);
 		});
 
 		delTD.appendChild(delBtn);
@@ -551,10 +556,19 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function clearCart() {
-		cartTable.replaceChildren();
+		cartBody.replaceChildren();
 	}
 
 	async function deleteStore(storeId) {
+		const tripCount = parseInt(tripList.dataset.tripCount);
+
+		if (tripCount > 0) {
+			appendAlert(
+				"Trip list must be empty before deleting the store.",
+				"danger"
+			);
+		}
+
 		try {
 			const res = await fetch(`http://localhost:3000/stores/${storeId}`, {
 				method: "DELETE",
@@ -567,12 +581,21 @@ document.addEventListener("DOMContentLoaded", () => {
 			const storeEl = storeList.querySelector(`[data-store-id=
 				'${storeId}']`);
 			storeList.removeChild(storeEl);
+			storeList.dataset.storeCount = storeList.dataset.storeCount - 1;
 		} catch (error) {
 			console.error(error);
 		}
 	}
 
 	async function deleteTrip(tripId) {
+		const cartCount = parseInt(cartTable.dataset.cartCount);
+
+		if (cartCount > 0) {
+			appendAlert("Cart must be empty before deleting the trip.", "danger");
+
+			return;
+		}
+
 		try {
 			const res = await fetch(`http://localhost:3000/trips/${tripId}`, {
 				method: "DELETE",
@@ -584,6 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			const data = await res.json();
 			const tripEl = tripList.querySelector(`[data-trip-id='${tripId}']`);
 			tripList.removeChild(tripEl);
+			tripList.dataset.tripCount = tripList.dataset.tripCount - 1;
 		} catch (error) {
 			console.error(error);
 		}
