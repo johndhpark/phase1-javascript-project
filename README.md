@@ -26,10 +26,10 @@ The user can delete any of the items in the three lists by clicking the trash ca
 
 ## Future Plans
 
-Due to the time constraints, there are many features that I was not able to add, but plan to add in the future. Some of them include:
+Due to the time constraint, there are many features that I was not able to add, but plan to add in the future. Some of them include:
 
 - [ ] Search
 - [ ] Sorting
 - [ ] Tags
 - [ ] Group trips by dates
-- [ ] Scrape websites for cheapest products for that week and add them to cart.
+- [ ] Scrape websites for cheapest products for that week and add them to carts.
