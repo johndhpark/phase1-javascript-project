@@ -1,4 +1,4 @@
-# PHASE 1 - JAVASCRIPT PROJECT ("Eggs are Expensive!!!")
+# PHASE 1 - JAVASCRIPT PROJECT ("Eggs are Too Expensive!!!")
 
 A SPA (Single Page Application) using HTML, CSS, and JS to communicate with a public API.
 <br><br>
@@ -10,13 +10,12 @@ Recently I have been trying to be more health conscious. However, due to the ris
 
 ## Getting Started
 
-
 1. Fork the project.
 2. Clone the project to local directory.
 3. Go to the project directory from the terminal.
 4. Run the command `npm install` to install dependencies.
 5. Lastly, run `npm start` to start the application.
-<br><br>
+   <br><br>
 
 ## How It Works
 
